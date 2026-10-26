@@ -1,0 +1,40 @@
+# === Documentos de trabajo del Product Owner (solo locales, no se comparten) ===
+01-Documentacion/Docs de trabajo PO/
+
+# === Archivos temporales de Office ===
+~$*
+*.tmp
+
+# === Sistema operativo ===
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# === Editores ===
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+
+# === Configuración local y secretos ===
+.env
+.env.local
+.env.*.local
+application-local.properties
+application-local.yml
+
+# === Node / Vue / Ionic / Angular ===
+node_modules/
+dist/
+www/
+.angular/
+.sass-cache/
+npm-debug.log*
+
+# === Java / Maven ===
+target/
+*.class
+hs_err_pid*
+
+# === Logs ===
+*.log
