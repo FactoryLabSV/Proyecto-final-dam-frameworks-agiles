@@ -78,6 +78,8 @@ Cada carpeta tiene su propio `README.md` con las instrucciones para crear y ejec
 7. Mueve la tarjeta en Jira y adjunta la captura de evidencia (ver Definition of Done).
 
 > Nunca hagas commit directo a `main` ni a `develop`.
+>
+> **¿Primera vez con Git o con ramas?** Sigue la guía paso a paso: [GUIA-GIT.md](GUIA-GIT.md)
 
 ### Qué NO se sube al repositorio
 
@@ -92,7 +94,7 @@ Estas reglas ya están en el archivo `.gitignore`. Si necesitas un archivo de co
 ## Cómo empezar
 
 1. Acepta la invitación al repositorio que llega a tu correo de GitHub.
-2. Clónalo con GitHub Desktop (*File → Clone repository*) o con:
+2. Clónalo siguiendo la [guía de Git](GUIA-GIT.md) o con:
    ```
    git clone <URL-del-repositorio>
    ```
