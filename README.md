@@ -111,5 +111,5 @@ Estas reglas ya están en el archivo `.gitignore`. Si necesitas un archivo de co
 | 04 – Contexto, alcance y roles | Problema, visión, alcance, tecnologías y equipo |
 | 05 – Entrevistas de levantamiento de requisitos | Guion y entrevistas a los tipos de usuario |
 | 06 – Consolidado de historias aportadas | Historias identificadas por el equipo y trazabilidad |
-| 07 – Product Backlog | *(pendiente)* |
-| 08 – Sprint Planning – Sprint 1 | *(pendiente)* |
+| 07 – Product Backlog | Historias priorizadas, épicas, requisitos no funcionales, DoR y DoD |
+| 08 – Sprint Planning – Sprint 1 | Objetivo, tareas, responsables y agenda del Sprint 1 |
