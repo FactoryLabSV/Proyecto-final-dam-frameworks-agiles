@@ -2,7 +2,9 @@
 
 **Responsable:** Ali Velásquez · **Apoyo:** Marvin Gómez (entidades JPA) · **Revisión:** Carlos Hernández
 
-Motor: **por confirmar** (propuesta SQL Server Express; alternativa PostgreSQL).
+Motor: **PostgreSQL** (acordado por el equipo el 24/10/2026).
+
+El diseño de DBDDR estaba en SQL Server: al adaptar los scripts usar tipos de PostgreSQL, por ejemplo `GENERATED ALWAYS AS IDENTITY` (o `BIGSERIAL`) en lugar de `IDENTITY(1,1)`, `BOOLEAN` en lugar de `BIT`, `TIMESTAMP` en lugar de `DATETIME` y `CURRENT_TIMESTAMP` en lugar de `GETDATE()`.
 
 ## Estructura sugerida
 

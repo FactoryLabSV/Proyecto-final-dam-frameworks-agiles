@@ -46,7 +46,7 @@ Cada carpeta tiene su propio `README.md` con las instrucciones para crear y ejec
 
 | Parte | Tecnología |
 |---|---|
-| Base de datos | Por confirmar (propuesta: SQL Server Express; alternativa: PostgreSQL) |
+| Base de datos | PostgreSQL |
 | API | Java + Spring Boot (Spring Web, Spring Data JPA, Validation, Spring Security con JWT), Maven |
 | Panel administrativo | Vue CLI, Vue Router, Vuex, Vuetify 3, Axios (Options API) |
 | App móvil | Ionic + Angular (plantilla tabs), Axios o fetch |

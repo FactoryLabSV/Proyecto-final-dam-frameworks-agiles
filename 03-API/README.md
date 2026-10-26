@@ -5,7 +5,7 @@
 ## Crear el proyecto (Sprint 1, tarea HU-T1 / HU-T2)
 
 1. Generar el proyecto en [Spring Initializr](https://start.spring.io) con **Maven** y **Java**, usando la versión estable que ofrezca el sitio.
-2. Dependencias: Spring Web, Spring Data JPA, Validation, Spring Security y el driver del motor de base de datos elegido.
+2. Dependencias: Spring Web, Spring Data JPA, Validation, Spring Security y **PostgreSQL Driver**.
 3. Descomprimir el proyecto **dentro de esta carpeta** (`03-API/`), de modo que `pom.xml` quede en `03-API/`.
 
 ## Organización por capas
