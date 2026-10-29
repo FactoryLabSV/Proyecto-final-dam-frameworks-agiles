@@ -103,6 +103,8 @@ Estas reglas ya están en el archivo `.gitignore`. Si necesitas un archivo de co
 
 ## Documentación
 
+> La documentación del sprint en curso (actas, versiones nuevas de los documentos y entregables) está en la rama **`develop`**. En `main` solo está la versión cerrada del último sprint. Para verla en GitHub, elige `develop` en el selector de ramas.
+
 | Documento | Contenido |
 |---|---|
 | 01 – Propuesta de proyecto | Propuesta aprobada en Metodologías Ágiles |
