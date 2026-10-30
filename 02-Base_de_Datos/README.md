@@ -25,6 +25,14 @@ El diseño de DBDDR estaba en SQL Server: al adaptar los scripts usar tipos de P
 
 Se parte del diseño de DBDDR (ciclo 2-2025) y de Inventario Pro (DAW, ciclo 1-2026).
 
+## Referencia: script de Inventario Pro
+
+`Referencia/inventario_pro_mysql.sql` tiene las tablas de Inventario Pro (DAW, ciclo 1-2026) en MySQL 8, generadas desde sus migraciones de Laravel. Es **solo de consulta** para el MER y el script de PostgreSQL. No se ejecuta en el proyecto.
+
+- Las tablas `suppliers_contacts`, `brands_suppliers`, `product_units` e `inventory_moves` están marcadas como fuera del alcance.
+- Cambios ya acordados respecto a ese diseño: `requires_expiration` en `products` (D-01) y el rol Vendedor (D-03).
+- Al pasarlo a PostgreSQL: `BIGINT UNSIGNED AUTO_INCREMENT` → `BIGINT GENERATED ALWAYS AS IDENTITY`, `TINYINT(1)` → `BOOLEAN`, `TINYINT` → `SMALLINT`, `COMMENT '...'` → `COMMENT ON COLUMN ...`, y quitar `ENGINE=InnoDB`.
+
 ## Convenciones
 
 - Nombres de tablas y columnas en inglés, en minúsculas con guion bajo (`snake_case`).
