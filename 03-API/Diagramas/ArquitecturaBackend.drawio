@@ -19,7 +19,7 @@
         <mxCell id="Jw0i-9m1zQZ_rY8h2y6b-1" parent="Jw0i-9m1zQZ_rY8h2y6b-7" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="Panel web&lt;div&gt;Vue&lt;/div&gt;" vertex="1">
           <mxGeometry height="60" width="120" x="60" y="40" as="geometry" />
         </mxCell>
-        <mxCell id="Jw0i-9m1zQZ_rY8h2y6b-2" parent="Jw0i-9m1zQZ_rY8h2y6b-7" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="App móvil" vertex="1">
+        <mxCell id="Jw0i-9m1zQZ_rY8h2y6b-2" parent="Jw0i-9m1zQZ_rY8h2y6b-7" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="App móvil Ionic + Angular" vertex="1">
           <mxGeometry height="60" width="120" x="260" y="40" as="geometry" />
         </mxCell>
         <mxCell id="Jw0i-9m1zQZ_rY8h2y6b-6" parent="Jw0i-9m1zQZ_rY8h2y6b-7" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Cliente Frontend" vertex="1">
