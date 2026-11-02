@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net">
   <diagram name="Página-1" id="uA_f9q-JSaOfeZjBl-RW">
-    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2175" dy="1177" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -100,7 +100,7 @@
         <mxCell id="l2Ota6COFPdXONb1doIN-6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="Driver JDBC" vertex="1">
           <mxGeometry height="60" width="120" x="362" y="990" as="geometry" />
         </mxCell>
-        <mxCell id="l2Ota6COFPdXONb1doIN-8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="PostgreSQL&lt;div&gt;Migraciones Flyway&lt;/div&gt;" vertex="1">
+        <mxCell id="l2Ota6COFPdXONb1doIN-8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;roundedPerimeter=1;" value="PostgreSQL" vertex="1">
           <mxGeometry height="60" width="120" x="362" y="1090" as="geometry" />
         </mxCell>
         <mxCell id="l2Ota6COFPdXONb1doIN-35" edge="1" parent="1" source="Jw0i-9m1zQZ_rY8h2y6b-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;defaultLabelBackgroundColor=page;" target="Jw0i-9m1zQZ_rY8h2y6b-4" value="">
