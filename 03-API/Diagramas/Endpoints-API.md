@@ -1,6 +1,6 @@
 # TAMACHIHUA-ERP · Contrato de APIs REST (T-10)
 
-**Módulo:** Inventario · **Backend:** Java + Spring Boot + PostgreSQL · **Versión:** 1.0 (borrador para revisión) · **Autor:** Marvin Isaí Gómez
+**Módulo:** Inventario · **Backend:** Java + Spring Boot + PostgreSQL · **Versión:** 1.1 (con decisiones del equipo) · **Autor:** Marvin Isaí Gómez
 **Base de referencia:** Product Backlog v1.2 (28/10/2026) y MER v1.0 (29/10/2026, 13 tablas)
 
 ---
@@ -13,11 +13,13 @@
 | Formato | JSON (`application/json`, UTF-8). Campos en `camelCase`; tablas y columnas en `snake_case` inglés (RNF-06) |
 | Fechas | `DATE` → `yyyy-MM-dd`; `TIMESTAMP` → ISO-8601 (`2026-10-30T14:05:00`) |
 | Decimales | Números JSON (no strings). Redondeo `HALF_UP` a 2 decimales en costos y precios |
-| Autenticación | `Authorization: Bearer <JWT>` (BCrypt + JWT, RNF-01) |
+| Autenticación | `Authorization: Bearer <JWT>` (BCrypt + JWT, RNF-01). El token **vence a la hora** (3600 s), sin refresh token |
 | Borrado | **Lógico** (`is_active`). No existe `DELETE` en ningún recurso; se usa `PATCH /{id}/status` (RNF-04) |
 | Mensajes | En español, comprensibles para el usuario final |
 | Auditoría | `userId` se toma **siempre del token**, nunca del body |
+| Base de datos | El **script SQL de Ali (T-08) es la fuente oficial** del esquema. No se usa Flyway. La API arranca con `spring.jpa.hibernate.ddl-auto=validate`: si una entidad no coincide con la base, la API no arranca y avisa |
 
+> **Nota Jackson/Lombok:** un campo `boolean isActive` genera el getter `isActive()` y Jackson lo serializa como `"active"`. Usar `Boolean isActive` (wrapper) o `@JsonProperty("isActive")` para respetar este contrato.
 
 ### 1.1 Roles
 
@@ -34,9 +36,9 @@ Los roles **no son jerárquicos** (HU-17 v1.2): cada endpoint declara explícita
 
 | Código | Uso |
 |---|---|
-| 200 / 201 / 204 | Consulta o actualización OK / creación OK / sin contenido (logout, cambios de estado) |
+| 200 / 201 / 204 | Consulta o actualización OK / creación OK / sin contenido (cambios de estado) |
 | 400 | Validación fallida (Bean Validation o regla de negocio sobre un campo). Incluye `errors[]` (RNF-04) |
-| 401 | Sin token, token vencido/invalidado o credenciales incorrectas |
+| 401 | Sin token, token vencido o credenciales incorrectas |
 | 403 | Autenticado pero sin permiso para el recurso |
 | 404 | Recurso no existe |
 | 409 | Conflicto de unicidad o de estado (usuario duplicado, lote duplicado, precio vigente concurrente) |
@@ -69,7 +71,7 @@ Parámetros: `page` (base 0, default 0), `size` (default 20, máximo 100), `sort
 
 ### 1.5 Patrón CRUD de catálogos
 
-Se repite en categorías, marcas, modelos, unidades, presentaciones y proveedores.
+Se repite en categorías, tipos de producto, marcas, modelos, unidades, presentaciones y proveedores.
 
 | Operación | Método y ruta | Éxito |
 |---|---|---|
@@ -86,11 +88,11 @@ Se repite en categorías, marcas, modelos, unidades, presentaciones y proveedore
 
 | Recurso | ADMIN | WAREHOUSE | PURCHASING | SELLER |
 |---|:-:|:-:|:-:|:-:|
-| Auth (login, logout, me) | ✔ | ✔ | ✔ | ✔ |
+| Auth (login, me) | ✔ | ✔ | ✔ | ✔ |
 | Usuarios y roles | ✔ | – | – | – |
 | Catálogos (escritura) | ✔ | – | – | – |
 | Catálogos (lectura / options) | ✔ | ✔ | ✔ | – |
-| Productos y presentaciones (escritura) ⚠ | ✔ | ✔ | – | – |
+| Productos y presentaciones (escritura) | ✔ | ✔ | – | – |
 | Productos (lectura) | ✔ | ✔ | ✔ | – |
 | Precios: cambiar y ver historial | ✔ | – | – | – |
 | Proveedores | ✔ | – | ✔ | – |
@@ -102,8 +104,6 @@ Se repite en categorías, marcas, modelos, unidades, presentaciones y proveedore
 | Exportar reporte (PDF/Excel) | ✔ | – | – | – |
 | `/api/app/*` (consulta móvil) | ✔ | ✔ | – | ✔ |
 
-⚠ Ver pendiente P-04.
-
 ---
 
 ## 3. Seguridad y autenticación (HU-01, HU-02, HU-17)
@@ -111,7 +111,6 @@ Se repite en categorías, marcas, modelos, unidades, presentaciones y proveedore
 | Método y ruta | Roles | Descripción |
 |---|---|---|
 | `POST /api/auth/login` | Público | Login panel y app (misma API) |
-| `POST /api/auth/logout` | Autenticado | Invalida el token (204) |
 | `GET /api/auth/me` | Autenticado | Datos del usuario en sesión |
 | `GET /api/roles` | ADMIN | Lista de roles para combos |
 | `GET /api/users` | ADMIN | Filtros: `search`, `roleId`, `isActive` |
@@ -141,8 +140,10 @@ Se repite en categorías, marcas, modelos, unidades, presentaciones y proveedore
 Reglas:
 - Credenciales incorrectas **o** usuario inactivo → 401 con el mismo mensaje genérico `"Credenciales inválidas"` (no revela si falló usuario o contraseña).
 - La app solo acepta roles `SELLER`, `WAREHOUSE` y `ADMIN`; el panel acepta `ADMIN`, `WAREHOUSE` y `PURCHASING`. Si el rol no corresponde a la interfaz → 403.
-- Logout: el `jti` del token se registra en una lista de tokens revocados hasta su vencimiento (ver P-02). Cualquier petición con un token revocado → 401.
+- **Cierre de sesión:** lo hace el cliente (la app y el panel borran el token). La API **no guarda sesiones** ni lista de tokens revocados; no existe `POST /api/auth/logout`.
+- El token vence a la hora. Con un token vencido, la API responde 401 y el cliente redirige al login.
 - Sin token válido, la API rechaza toda operación protegida (401).
+- Un usuario desactivado conserva su token hasta que venza (máximo 1 hora); no puede iniciar sesión de nuevo.
 
 **UserCreateRequest**
 
@@ -173,13 +174,22 @@ Todos siguen el patrón de la sección 1.5. Escritura: `ADMIN`. Lectura y `optio
 | `name` | string | Obligatorio, ≤ 100, único (sin distinguir mayúsculas) |
 | `description` | string | Opcional, ≤ 255 |
 
-### 4.2 Marcas · `/api/brands`
+### 4.2 Tipos de producto · `/api/product-types`
+
+Un nivel más de filtrado y búsqueda de productos (panel y app), con el mismo patrón CRUD que los demás catálogos.
+
+| Campo | Tipo | Validación |
+|---|---|---|
+| `name` | string | Obligatorio, ≤ 100, único (sin distinguir mayúsculas) |
+| `description` | string | Opcional, ≤ 255 |
+
+### 4.3 Marcas · `/api/brands`
 
 | Campo | Tipo | Validación |
 |---|---|---|
 | `name` | string | Obligatorio, ≤ 100, único |
 
-### 4.3 Modelos · `/api/models`
+### 4.4 Modelos · `/api/models`
 
 Listado filtrable por `brandId`.
 
@@ -190,14 +200,14 @@ Listado filtrable por `brandId`.
 
 La respuesta incluye `brand {id, name}`.
 
-### 4.4 Unidades de medida · `/api/measure-units`
+### 4.5 Unidades de medida · `/api/measure-units`
 
 | Campo | Tipo | Validación |
 |---|---|---|
 | `name` | string | Obligatorio, ≤ 50, único |
 | `code` | string | Obligatorio, ≤ 10, único |
 
-### 4.5 Presentaciones · `/api/presentations`
+### 4.6 Presentaciones · `/api/presentations`
 
 | Campo | Tipo | Validación |
 |---|---|---|
@@ -207,11 +217,7 @@ La respuesta incluye `brand {id, name}`.
 
 La respuesta incluye `measureUnit {id, name, code}`.
 
-### 4.6 Tipos de producto · `/api/product-types` ⚠
-
-Solo lectura (`GET` list / options) con datos semilla en la migración. No existe historia que pida su CRUD (ver P-05).
-
-Regla común: **no se puede desactivar** un registro de catálogo que tenga hijos activos (categoría con productos activos, marca con modelos activos, etc.) → 409.
+Regla común: **no se puede desactivar** un registro de catálogo que tenga hijos activos (categoría o tipo con productos activos, marca con modelos activos, etc.) → 409.
 
 ---
 
@@ -273,7 +279,7 @@ Regla común: **no se puede desactivar** un registro de catálogo que tenga hijo
 }
 ```
 
-**Regla de existencia (derivada, no se guarda):** `stock` = suma de `available_quantity` de los lotes activos de esa presentación. `stockStatus`: `OUT` si `stock = 0`; `LOW` si `stock ≤ minStock`; `OK` en otro caso. `currentPrice` es `null` si la presentación aún no tiene precio.
+**Regla de existencia (derivada, no se guarda):** `stock` = suma de `available_quantity` de los **lotes activos** de esa presentación (lote activo: `is_active = true` y `available_quantity > 0`). `stockStatus`: `OUT` si `stock = 0`; `LOW` si `stock ≤ minStock`; `OK` en otro caso. `currentPrice` es `null` si la presentación aún no tiene precio.
 
 ### 5.2 Presentaciones del producto (HU-07) · `/api/products/{productId}/presentations`
 
@@ -301,7 +307,7 @@ Regla común: **no se puede desactivar** un registro de catálogo que tenga hijo
 
 Reglas (una sola transacción):
 1. Cierra el precio vigente (`end_date = now`) y crea el nuevo (`start_date = now`, `end_date = null`, `user_id` del token).
-2. Solo puede existir **un precio vigente** por presentación: garantizado también en la BD con índice único parcial `UNIQUE (product_presentation_id) WHERE end_date IS NULL` (conflicto concurrente → 409).
+2. Solo puede existir **un precio vigente** por presentación. Se valida en el servicio (bloqueando la fila de la presentación) y, si el script de la BD lo incluye, también con el índice único parcial `UNIQUE (product_presentation_id) WHERE end_date IS NULL` (ver P-11). Conflicto concurrente → 409.
 
 **PriceHistoryItem:** `id`, `price`, `startDate`, `endDate` (null = vigente), `changedBy {id, fullName}`.
 
@@ -315,7 +321,7 @@ Patrón CRUD (sección 1.5). Roles: `ADMIN`, `PURCHASING`. Filtros: `search` (no
 |---|---|---|
 | `tradeName` | string | Obligatorio, ≤ 150 |
 | `legalName` | string | Obligatorio, ≤ 150 |
-| `nit` | string | Obligatorio, único, ≤ 17, formato `^\d{4}-\d{6}-\d{3}-\d$` (propuesto, ver P-08) |
+| `nit` | string | Obligatorio, único, ≤ 17. Acepta **NIT de 14 dígitos** (`0000-000000-000-0`) o **DUI usado como NIT** (`00000000-0`): `^(\d{4}-\d{6}-\d{3}-\d\|\d{8}-\d)$`. Solo formato, sin dígito verificador |
 | `nrc` | string | Opcional, único, ≤ 10, formato `^\d{1,7}-\d$` (propuesto, ver P-08) |
 | `address` | string | Opcional, ≤ 255 |
 | `phone` | string | Opcional, ≤ 20, solo dígitos, espacios, `+` y `-` |
@@ -368,11 +374,13 @@ Al ser la existencia derivada de los lotes, guardar el lote **ya incrementa el s
 }
 ```
 
+`expirationSeverity`: `NONE` (sin fecha o más de 30 días), `YELLOW`, `RED` o `EXPIRED` (misma regla de la sección 8). `daysToExpire` es negativo si el lote ya venció.
+
 `unitCost` y `totalCost` **solo se serializan para `ADMIN` y `PURCHASING`**; para `WAREHOUSE` el campo no aparece (se usan dos DTOs: `LotResponse` y `LotCostResponse`, nunca ocultar con `@JsonIgnore`).
 
 **Filtros de `GET /api/lots`:** `productId`, `supplierId`, `invoiceNumber`, `onlyAvailable` (`availableQuantity > 0`), paginado. Orden por defecto: `expirationDate asc` con nulos al final.
 
-**Corrección de cantidad (HU-11):** `PATCH /api/lots/{id}/available-quantity` con `{ "availableQuantity": 38.00 }`. Validación: **≥ 0** y **≤ `receivedQuantity`**. El stock se recalcula solo (derivado).
+**Corrección de cantidad (HU-11):** `PATCH /api/lots/{id}/available-quantity` con `{ "availableQuantity": 38.00 }`. Validación: **≥ 0** y **≤ `receivedQuantity`**. El stock se recalcula solo (derivado). Es la vía para que Bodega retire un lote vencido (cantidad 0).
 
 **Último costo:** `GET /api/products/{productId}/last-cost` → `[{ productPresentationId, presentationName, lastUnitCost, lotId, entryDate }]` (lote más reciente por presentación).
 
@@ -382,15 +390,23 @@ Al ser la existencia derivada de los lotes, guardar el lote **ya incrementa el s
 
 | Método y ruta | Roles | Respuesta |
 |---|---|---|
-| `GET /api/dashboard/summary` | ADMIN, WAREHOUSE | `{ activeProducts, lowStockProducts, activeLots, lotsExpiringIn30Days }` |
+| `GET /api/dashboard/summary` | ADMIN, WAREHOUSE | `{ activeProducts, lowStockProducts, activeLots, expiringLots, expiredLots }` |
 | `GET /api/dashboard/low-stock` | ADMIN, WAREHOUSE, PURCHASING | Tabla de bajo stock, paginada |
-| `GET /api/dashboard/expiring-lots` | ADMIN, WAREHOUSE | Lotes por vencer en 30 días |
+| `GET /api/dashboard/expiring-lots` | ADMIN, WAREHOUSE | Lotes vencidos y por vencer en 30 días |
 
 **LowStockItem:** `productId`, `productCode`, `productName`, `presentationName`, `currentStock`, `minStock`, `missing` (`minStock − currentStock`, nunca negativo). Condición: `currentStock ≤ minStock`.
 
-**ExpiringLotItem:** `lotId`, `productName`, `presentationName`, `lotNumber`, `expirationDate`, `daysRemaining`, `severity`.
+**ExpiringLotItem:** `lotId`, `productName`, `presentationName`, `lotNumber`, `expirationDate`, `daysRemaining`, `severity`, `label`.
 
-Regla D-04: ventana fija de 30 días. `severity = RED` si `daysRemaining ≤ 15`, `YELLOW` si `16–30`. Los valores se calculan en cada consulta, por lo que la alerta desaparece cuando deja de cumplirse. Lotes ya vencidos y definición de "lote activo": ver P-06.
+Solo entran **lotes activos** (`is_active = true` y `available_quantity > 0`) con `expirationDate` informada y `expirationDate ≤ hoy + 30 días`. Orden: `expirationDate asc` (los vencidos aparecen primero).
+
+| `severity` | Condición (`daysRemaining`) | `label` | Color |
+|---|---|---|---|
+| `EXPIRED` | `< 0` (ya venció y aún tiene existencia) | Vencido | Rojo |
+| `RED` | `0` a `15` | Vence pronto | Rojo |
+| `YELLOW` | `16` a `30` | Vence pronto | Amarillo |
+
+Regla D-04: ventana fija de 30 días. Los valores se calculan en cada consulta, por lo que la alerta desaparece cuando deja de cumplirse (por ejemplo, cuando Bodega corrige la cantidad del lote a 0). `expiringLots` cuenta `RED` + `YELLOW`; `expiredLots` cuenta `EXPIRED`.
 
 ---
 
@@ -412,12 +428,13 @@ Regla de oro (HU-14): estos DTOs **no contienen costos, lotes ni proveedores**, 
 
 | Método y ruta | Descripción | HU |
 |---|---|---|
-| `GET /api/app/products?search=&categoryId=&page=&size=` | Búsqueda y filtro por categoría | 13, 15 |
+| `GET /api/app/products?search=&categoryId=&productTypeId=&page=&size=` | Búsqueda y filtros por categoría y tipo | 13, 15 |
 | `GET /api/app/products/{id}` | Detalle con presentaciones, existencia y precio | 14 |
 | `GET /api/app/categories` | Categorías activas para filtrar | 15 |
+| `GET /api/app/product-types` | Tipos de producto activos para filtrar | 15 |
 | `GET /api/app/alerts/low-stock` | Productos en bajo stock | 16 |
 
-**Búsqueda (`search`):** coincide por nombre (contiene, sin distinguir mayúsculas), por código de producto o por **código exacto de presentación**. Se combina con `categoryId`. Solo productos y presentaciones activos. Sin resultados → 200 con `content: []` (el mensaje "sin resultados" lo muestra la app). Tamaño máximo de página: 50.
+**Búsqueda (`search`):** coincide por nombre (contiene, sin distinguir mayúsculas), por código de producto o por **código exacto de presentación**. Se combina con `categoryId` y `productTypeId`. Solo productos y presentaciones activos. Sin resultados → 200 con `content: []` (el mensaje "sin resultados" lo muestra la app). Tamaño máximo de página: 50.
 
 **AppProductSummary** (lista)
 
@@ -441,7 +458,7 @@ Regla de oro (HU-14): estos DTOs **no contienen costos, lotes ni proveedores**, 
 ```json
 {
   "id": 12, "code": "CLV-001", "name": "Clavo 2 pulgadas", "description": "Clavo de acero",
-  "categoryName": "Ferretería general", "brandName": "Acme",
+  "categoryName": "Ferretería general", "productTypeName": "Consumible", "brandName": "Acme",
   "presentations": [
     { "code": "CLV-001-CJ", "name": "Caja", "unit": "Libra", "quantity": 25.00,
       "price": 18.50, "stock": 40.00, "stockStatus": "OK" }
@@ -451,7 +468,7 @@ Regla de oro (HU-14): estos DTOs **no contienen costos, lotes ni proveedores**, 
 
 `price` es `null` si no hay precio vigente. `stockStatus`: `OK`, `LOW` (bajo stock) u `OUT` (agotado). `brandName` es `null` si el producto no tiene modelo. **Nunca** se devuelve `minStock`, `unitCost`, `supplier` ni datos de lotes.
 
-**AppCategory:** `{ "id": 1, "name": "Ferretería general" }`.
+**AppCategory / AppProductType:** `{ "id": 1, "name": "Ferretería general" }`.
 
 **AppLowStockItem (HU-16):** `productId`, `productName`, `presentationName`, `stock`, `stockStatus`. Sin `minStock`.
 
@@ -459,7 +476,34 @@ Regla de oro (HU-14): estos DTOs **no contienen costos, lotes ni proveedores**, 
 
 ---
 
-## 11. Cobertura de historias
+## 11. Decisiones y pendientes
+
+### 11.1 Decisiones cerradas (incorporadas en esta versión)
+
+| ID | Tema | Decisión |
+|---|---|---|
+| P-02 | Cierre de sesión | Lo hace el cliente borrando el token; JWT de 1 hora; sin lista de revocados ni tabla 14 |
+| P-04 | Productos y Bodega | Bodega registra y edita productos y presentaciones (HU-06). El PO corrige la tabla de roles del documento 07 |
+| P-05 | Tipos de producto | Nivel extra de filtrado y búsqueda; mismo CRUD que los demás catálogos |
+| P-06 | Lotes vencidos | Con existencia, aparecen en el dashboard con `severity = EXPIRED`, etiqueta "Vencido", en rojo. Lote activo = `is_active = true` y `available_quantity > 0` |
+| P-08 (NIT) | Formato de NIT | Acepta NIT de 14 dígitos y DUI como NIT; solo validación de formato |
+| Flyway | Control del esquema | Sin Flyway. Script de Ali (T-08) como fuente oficial; `ddl-auto=validate` |
+
+### 11.2 Pendientes abiertos
+
+| ID | Tema | Propuesta | Con quién |
+|---|---|---|---|
+| P-01 | Tabla `products_presentations` (plural en ambos lados, distinta al resto). Con `ddl-auto=validate` el nombre de la entidad debe coincidir con el script | Renombrar a `product_presentations` en el script antes de crear las entidades. Si no se renombra, la entidad usa `@Table(name = "products_presentations")` | Ali |
+| P-03 | "Existencia total" (HU-06, HU-13) contradice HU-07 ("sin mezclar presentaciones distintas"): sumar cajas con libras no tiene sentido | El contrato devuelve la existencia **por presentación**. Si el PO quiere un solo número, se agrega `totalStock` | PO |
+| P-07 | Unicidad de lote: el MER la define por proveedor (`supplier_id + lot_number`). Un proveedor puede reutilizar el mismo número para productos distintos de una factura | Si ocurre, ampliar a `supplier_id + lot_number + product_presentation_id` | PO / Ali |
+| P-08 (NRC) | Formato del NRC (HU-09) | `hasta 7 dígitos, guion, 1 dígito`. Validar con el PO | PO |
+| P-09 | La corrección de lote (HU-11) no guarda quién la hizo (`user_id` del lote es quien lo registró) | Aceptable para esta versión; a futuro, tabla de movimientos/kardex | Equipo |
+| P-10 | Un lote vencido con existencia **sigue sumando** al stock que ve el vendedor en la app, hasta que Bodega corrige su cantidad | Mantener la regla simple del MER (suma de lotes activos). Si el PO prefiere excluir vencidos del stock mostrado, se agrega la condición `expiration_date >= hoy` en la consulta | PO |
+| P-11 | Con `ddl-auto=validate`, el script de Ali debe coincidir exactamente con las entidades (tipos, longitudes, nombres). `validate` **no revisa** índices, `CHECK` ni datos | El script T-08 debe incluir: índice único parcial de precios vigentes; `CHECK` de cantidades (> 0) y `notes` ≤ 200; **datos iniciales**: los 4 roles (`ADMIN`, `WAREHOUSE`, `PURCHASING`, `SELLER`) y un **usuario administrador inicial** con contraseña en BCrypt (no hay autorregistro, sin él nadie puede entrar) | Ali |
+
+---
+
+## 12. Cobertura de historias
 
 | Épica | Historias | Sección |
 |---|---|---|
@@ -470,3 +514,17 @@ Regla de oro (HU-14): estos DTOs **no contienen costos, lotes ni proveedores**, 
 | Lotes | HU-10, HU-11 | 7 |
 | Dashboard | HU-12, HU-18 | 8, 9 |
 | App móvil | HU-13, HU-14, HU-15, HU-16, HU-19 | 10 |
+
+---
+
+## 13. Historial de cambios
+
+**v1.1**
+- Se eliminó `POST /api/auth/logout`; el cierre de sesión es del cliente y el JWT vence a la hora (P-02).
+- Se quitó la marca de pendiente en permisos de productos: Bodega escribe productos y presentaciones (P-04).
+- Tipos de producto pasan a CRUD completo (`/api/product-types`) y se agregó el filtro `productTypeId` y `GET /api/app/product-types` en la app (P-05).
+- Dashboard: nueva severidad `EXPIRED` con etiqueta "Vencido"; definición de lote activo; `summary` incluye `expiredLots` (P-06).
+- NIT acepta DUI como NIT (P-08).
+- Se eliminó Flyway: el script de Ali es la fuente oficial y se usa `ddl-auto=validate`; nuevos pendientes P-10 y P-11.
+
+**v1.0** · Primera versión del contrato.
