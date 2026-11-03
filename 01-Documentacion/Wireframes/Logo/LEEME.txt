@@ -1,0 +1,20 @@
+TAMACHIHUA-ERP · Logo (versión 1.0, 03/11/2026)
+
+Archivos
+- tamachihua-logo-horizontal (.svg / .png): uso principal, sobre fondo blanco o claro (login, encabezados, documentos).
+- tamachihua-logo-horizontal-blanco (.svg / .png): para fondos del color primario (menú lateral del panel, barra de la app).
+- tamachihua-logo-vertical (.svg / .png): portadas y pantallas de bienvenida.
+- tamachihua-isotipo (.svg / .png): ícono solo (menú contraído, ícono de la app).
+- favicon-32.png y favicon-192.png: favicon del panel e ícono de la app.
+
+Colores (los mismos de la guía de estilo de Vuetify)
+- Primary   #0873C4
+- Secondary #004B87
+- Accent    #00A8FF
+- Texto secundario #5B6B7A
+
+Tipografía del logotipo: Inter (ExtraBold y SemiBold), convertida a trazos en los SVG,
+así que no hace falta instalar la fuente.
+
+Recomendación: preferir los SVG en el panel y en la app (se ven nítidos en cualquier tamaño).
+No cambiar colores ni proporciones, y dejar un margen libre alrededor del logo.
