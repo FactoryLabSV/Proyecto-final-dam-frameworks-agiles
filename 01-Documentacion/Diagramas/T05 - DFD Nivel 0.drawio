@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.0.6 Chrome/138.0.7204.100 Electron/37.2.3 Safari/537.36" version="28.0.6">
   <diagram name="Página-1" id="XTxKfSdDhX6hxXEbVZUR">
-    <mxGraphModel dx="1042" dy="1795" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1226" dy="1905" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -136,10 +136,10 @@
         <mxCell id="QTDs6GfY8pzAYfw4lewG-33" value="Credenciales&lt;div&gt;Consulta de productos&lt;/div&gt;&lt;div&gt;Solicitudes de búsqueda&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="585" y="365" width="145" height="44" as="geometry" />
         </mxCell>
-        <mxCell id="QTDs6GfY8pzAYfw4lewG-34" value="&lt;div&gt;Alertas&lt;/div&gt;&lt;div&gt;Precios&lt;/div&gt;&lt;div&gt;Productos&lt;/div&gt;&lt;div&gt;Existencias&lt;/div&gt;&lt;div&gt;Detalle del producto&lt;/div&gt;&lt;div&gt;Resultado de autenticación&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+        <mxCell id="QTDs6GfY8pzAYfw4lewG-34" value="&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Precios&lt;/span&gt;&lt;/div&gt;&lt;div&gt;Productos&lt;/div&gt;&lt;div&gt;Existencias&lt;/div&gt;&lt;div&gt;Detalle del producto&lt;/div&gt;&lt;div&gt;Resultado de autenticación&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="480" y="484" width="170" height="88" as="geometry" />
         </mxCell>
-        <mxCell id="m37VtM_zE8P8-rcyKZxm-1" value="DFD - NIVEL 0" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#000000;fontSize=22;" vertex="1" parent="1">
+        <mxCell id="m37VtM_zE8P8-rcyKZxm-1" value="DFD - NIVEL 0" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#000000;fontSize=22;" parent="1" vertex="1">
           <mxGeometry x="170" y="-50" width="470" height="60" as="geometry" />
         </mxCell>
       </root>
