@@ -1,212 +1,5 @@
-﻿SET
-BEGIN
-DROP TABLE
-DROP TABLE
-DROP TABLE
-DROP TABLE
-DROP TABLE
-DROP TABLE
-DROP TABLE
-DROP TABLE
-DROP TABLE
-DROP TABLE
-DROP TABLE
-DROP TABLE
-DROP TABLE
-DROP FUNCTION
-CREATE FUNCTION
-COMMENT
-CREATE TABLE
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-CREATE TABLE
-CREATE INDEX
-CREATE INDEX
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-CREATE TABLE
-CREATE INDEX
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-CREATE TABLE
-CREATE INDEX
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-CREATE TABLE
-CREATE INDEX
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-CREATE TABLE
-CREATE INDEX
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-CREATE TABLE
-CREATE INDEX
-CREATE INDEX
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-CREATE TABLE
-CREATE INDEX
-CREATE INDEX
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-CREATE TABLE
-CREATE INDEX
-CREATE INDEX
-CREATE INDEX
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-CREATE TABLE
-CREATE INDEX
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-CREATE TABLE
-CREATE INDEX
-CREATE INDEX
-CREATE INDEX
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-CREATE TABLE
-CREATE INDEX
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-CREATE TABLE
-CREATE INDEX
-CREATE INDEX
-CREATE INDEX
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-COMMENT
-CREATE TRIGGER
-CREATE TRIGGER
-CREATE TRIGGER
-CREATE TRIGGER
-CREATE TRIGGER
-CREATE TRIGGER
-CREATE TRIGGER
-CREATE TRIGGER
-CREATE TRIGGER
-CREATE TRIGGER
-CREATE TRIGGER
-CREATE TRIGGER
-CREATE TRIGGER
-COMMIT
 SET
-BEGIN
-TRUNCATE TABLE
-INSERT 0 4
-INSERT 0 5
-INSERT 0 7
-INSERT 0 4
-INSERT 0 8
-INSERT 0 11
-INSERT 0 6
-INSERT 0 13
-INSERT 0 15
-INSERT 0 22
-INSERT 0 22
-INSERT 0 5
-INSERT 0 6
-INSERT 0 13
-INSERT 0 12
-DO
-COMMIT
-SET
-Despliegue de nulos es ½ÔÇö╗.
+Despliegue de nulos es �—�.
 BEGIN
 CREATE FUNCTION
 
@@ -228,7 +21,7 @@ CREATE FUNCTION
  product_lots          |    25
 
 
-=== 2. Usuarios, roles y verificaci├│n del hash BCrypt (pgcrypto) ===
+=== 2. Usuarios, roles y verificación del hash BCrypt (pgcrypto) ===
 CREATE EXTENSION
  username  |    rol     | rol_pantalla  | activo | prefijo | largo | clave Tamachihua2026 | clave incorrecta 
 -----------+------------+---------------+--------+---------+-------+----------------------+------------------
@@ -239,7 +32,7 @@ CREATE EXTENSION
  layala    | SELLER     | Vendedor      | f      | $2a$10$ |    60 | t                    | f
 
 
-=== 3. Existencia por presentaci├│n = SUM(available_quantity) de lotes activos (regla del contrato) ===
+=== 3. Existencia por presentación = SUM(available_quantity) de lotes activos (regla del contrato) ===
  producto | presentacion  |   codigo_pp    | existencia | minimo | estado | precio_vigente 
 ----------+---------------+----------------+------------+--------+--------+----------------
  FER-001  | Libra         | FER-001-LB     |      24.00 |  10.00 | OK     |           1.25
@@ -255,103 +48,106 @@ CREATE EXTENSION
  AGR-001  | Saco 100 lb   | AGR-001-SC100  |      37.00 |  10.00 | OK     |          38.50
  AGR-001  | Libra         | AGR-001-LB     |      45.00 |  20.00 | OK     |           0.45
  AGR-010  | Frasco 1 L    | AGR-010-FR1L   |      38.00 |   6.00 | OK     |           9.90
- AGR-010  | Gal├│n         | AGR-010-GL     |       4.00 |   2.00 | OK     |          34.00
+ AGR-010  | Galón         | AGR-010-GL     |       4.00 |   2.00 | OK     |          34.00
  AGR-011  | Frasco 1 L    | AGR-011-FR1L   |       9.00 |   6.00 | OK     |           7.95
  SEM-001  | Bolsa 25 lb   | SEM-001-BL25   |       8.00 |   4.00 | OK     |          55.00
  SEM-001  | Libra         | SEM-001-LB     |      12.00 |   5.00 | OK     |           2.60
  HER-001  | Unidad        | HER-001-UN     |       2.00 |   2.00 | LOW    |         199.00
  HER-005  | Unidad        | HER-005-UN     |       5.00 |   2.00 | OK     |          39.90
  HER-010  | Unidad        | HER-010-UN     |      25.00 |  10.00 | OK     |           6.50
- PIN-001  | Gal├│n         | PIN-001-GL     |      10.00 |   4.00 | OK     |          19.75
+ PIN-001  | Galón         | PIN-001-GL     |      10.00 |   4.00 | OK     |          19.75
  PIN-001  | Cuarto        | PIN-001-CT     |      16.00 |   6.00 | OK     |           6.25
 
 
 === 4. Historial de precios (presentaciones con cambios) ===
      code      | precio |        desde        |        hasta        |  estado   |     autorizo      
 ---------------+--------+---------------------+---------------------+-----------+-------------------
- AGR-001-LB    |   0.45 | 2026-10-22 00:00:00 | ÔÇö                   | vigente   | Marta Elena Rivas
- AGR-001-LB    |   0.42 | 2026-01-01 00:00:00 | 2026-10-22 00:00:00 | hist├│rico | Marta Elena Rivas
- AGR-001-SC100 |  38.50 | 2026-10-22 00:00:00 | ÔÇö                   | vigente   | Marta Elena Rivas
- AGR-001-SC100 |  36.75 | 2026-01-01 00:00:00 | 2026-10-22 00:00:00 | hist├│rico | Marta Elena Rivas
- CON-001-BL    |   9.75 | 2026-10-20 00:00:00 | ÔÇö                   | vigente   | Marta Elena Rivas
- CON-001-BL    |   9.50 | 2026-01-01 00:00:00 | 2026-10-20 00:00:00 | hist├│rico | Marta Elena Rivas
- FER-001-CJ25  |  28.50 | 2026-09-01 00:00:00 | ÔÇö                   | vigente   | Marta Elena Rivas
- FER-001-CJ25  |  26.75 | 2026-01-01 00:00:00 | 2026-09-01 00:00:00 | hist├│rico | Marta Elena Rivas
- FER-001-LB    |   1.25 | 2026-09-01 00:00:00 | ÔÇö                   | vigente   | Marta Elena Rivas
- FER-001-LB    |   1.15 | 2026-01-01 00:00:00 | 2026-09-01 00:00:00 | hist├│rico | Marta Elena Rivas
+ AGR-001-LB    |   0.45 | 2026-10-22 00:00:00 | —                   | vigente   | Marta Elena Rivas
+ AGR-001-LB    |   0.42 | 2026-01-01 00:00:00 | 2026-10-22 00:00:00 | histórico | Marta Elena Rivas
+ AGR-001-SC100 |  38.50 | 2026-10-22 00:00:00 | —                   | vigente   | Marta Elena Rivas
+ AGR-001-SC100 |  36.75 | 2026-01-01 00:00:00 | 2026-10-22 00:00:00 | histórico | Marta Elena Rivas
+ CON-001-BL    |   9.75 | 2026-10-20 00:00:00 | —                   | vigente   | Marta Elena Rivas
+ CON-001-BL    |   9.50 | 2026-01-01 00:00:00 | 2026-10-20 00:00:00 | histórico | Marta Elena Rivas
+ FER-001-CJ25  |  28.50 | 2026-09-01 00:00:00 | —                   | vigente   | Marta Elena Rivas
+ FER-001-CJ25  |  26.75 | 2026-01-01 00:00:00 | 2026-09-01 00:00:00 | histórico | Marta Elena Rivas
+ FER-001-LB    |   1.25 | 2026-09-01 00:00:00 | —                   | vigente   | Marta Elena Rivas
+ FER-001-LB    |   1.15 | 2026-01-01 00:00:00 | 2026-09-01 00:00:00 | histórico | Marta Elena Rivas
 
 
 === 5. Lotes con total_cost generado (columna GENERATED) ===
      lot_number     |  presentacion  |             proveedor             |   factura    |  ingreso   |   vence    | recibido | disponible | costo_u | costo_total 
 --------------------+----------------+-----------------------------------+--------------+------------+------------+----------+------------+---------+-------------
- CF-2408            | AGR-001-SC100  | Distribuidora Agr├¡cola La Cosecha | CCF-00045110 | 2026-08-05 | 2027-06-30 |    40.00 |      22.00 |   31.00 |     1240.00
- CF-2408            | AGR-001-LB     | Distribuidora Agr├¡cola La Cosecha | CCF-00045110 | 2026-08-05 | 2027-06-30 |    45.00 |      45.00 |    0.31 |       13.95
- AV-PK-1123         | AGR-010-FR1L   | Distribuidora Agr├¡cola La Cosecha | CCF-00045387 | 2026-09-12 | 2026-11-20 |    24.00 |      14.00 |    6.80 |      163.20
- L-PV2309           | FON-005-LT     | Ferretera Central                 | F-2231       | 2026-09-12 | 2027-03-15 |    24.00 |      18.00 |    3.75 |       90.00
- AV-LM-0905         | AGR-011-FR1L   | Agroinsumos Occidente             | CF-7781      | 2026-10-02 | 2026-12-10 |    12.00 |       9.00 |    5.40 |       64.80
- AV-PK-1201         | AGR-010-GL     | Agroinsumos Occidente             | CF-7781      | 2026-10-02 | 2027-01-15 |     6.00 |       4.00 |   24.50 |      147.00
- PX-2407            | PIN-001-GL     | Pinturas y M├ís                    | PM-1020      | 2026-10-10 | 2027-07-31 |    12.00 |      10.00 |   14.20 |      170.40
- PX-2407            | PIN-001-CT     | Pinturas y M├ís                    | PM-1020      | 2026-10-10 | 2027-07-31 |    24.00 |      16.00 |    4.30 |      103.20
- CF-2510            | AGR-001-SC100  | Distribuidora Agr├¡cola La Cosecha | CCF-00045821 | 2026-10-21 | 2027-10-31 |    15.00 |      15.00 |   32.40 |      486.00
- AV-PK-1301         | AGR-010-FR1L   | Distribuidora Agr├¡cola La Cosecha | CCF-00045821 | 2026-10-21 | 2027-02-28 |    24.00 |      24.00 |    6.95 |      166.80
- SL-CCF-00045821    | HER-005-UN     | Distribuidora Agr├¡cola La Cosecha | CCF-00045821 | 2026-10-21 | ÔÇö          |     4.00 |       4.00 |   28.00 |      112.00
+ CF-2408            | AGR-001-SC100  | Distribuidora Agrícola La Cosecha | CCF-00045110 | 2026-08-05 | 2027-06-30 |    40.00 |      22.00 |   31.00 |     1240.00
+ CF-2408            | AGR-001-LB     | Distribuidora Agrícola La Cosecha | CCF-00045110 | 2026-08-05 | 2027-06-30 |    45.00 |      45.00 |    0.31 |       13.95
+ AV-PK-1123         | AGR-010-FR1L   | Distribuidora Agrícola La Cosecha | CCF-00045387 | 2026-09-12 | 2026-11-14 |    24.00 |      14.00 |    6.80 |      163.20
+ L-PV2309           | FON-005-LT     | Ferretera Central                 | F-2231       | 2026-09-12 | 2026-10-30 |    24.00 |      18.00 |    3.75 |       90.00
+ AV-LM-0905         | AGR-011-FR1L   | Agroinsumos Occidente             | CF-7781      | 2026-10-02 | 2026-11-29 |    12.00 |       9.00 |    5.40 |       64.80
+ AV-PK-1201         | AGR-010-GL     | Agroinsumos Occidente             | CF-7781      | 2026-10-02 | 2026-11-19 |     6.00 |       4.00 |   24.50 |      147.00
+ PX-2407            | PIN-001-GL     | Pinturas y Más                    | PM-1020      | 2026-10-10 | 2027-07-31 |    12.00 |      10.00 |   14.20 |      170.40
+ PX-2407            | PIN-001-CT     | Pinturas y Más                    | PM-1020      | 2026-10-10 | 2027-07-31 |    24.00 |      16.00 |    4.30 |      103.20
+ CF-2510            | AGR-001-SC100  | Distribuidora Agrícola La Cosecha | CCF-00045821 | 2026-10-21 | 2027-10-31 |    15.00 |      15.00 |   32.40 |      486.00
+ AV-PK-1301         | AGR-010-FR1L   | Distribuidora Agrícola La Cosecha | CCF-00045821 | 2026-10-21 | 2027-02-28 |    24.00 |      24.00 |    6.95 |      166.80
+ SL-CCF-00045821    | HER-005-UN     | Distribuidora Agrícola La Cosecha | CCF-00045821 | 2026-10-21 | —          |     4.00 |       4.00 |   28.00 |      112.00
  SC-H59-26A         | SEM-001-BL25   | Agroinsumos Occidente             | CF-7902      | 2026-10-21 | 2027-05-01 |    10.00 |       8.00 |   42.00 |      420.00
  SC-H59-26A         | SEM-001-LB     | Agroinsumos Occidente             | CF-7902      | 2026-10-21 | 2027-05-01 |    12.00 |      12.00 |    1.68 |       20.16
- INI-FER-001-LB     | FER-001-LB     | Ferretera Central                 | INV-INICIAL  | 2026-11-02 | ÔÇö          |    24.00 |      24.00 |    0.85 |       20.40
- INI-FER-001-CJ25   | FER-001-CJ25   | Ferretera Central                 | INV-INICIAL  | 2026-11-02 | ÔÇö          |    10.00 |      10.00 |   19.50 |      195.00
- INI-FER-002-LB     | FER-002-LB     | Ferretera Central                 | INV-INICIAL  | 2026-11-02 | ÔÇö          |    30.00 |      30.00 |    0.85 |       25.50
- INI-FER-010-BL100  | FER-010-BL100  | Ferretera Central                 | INV-INICIAL  | 2026-11-02 | ÔÇö          |    15.00 |      15.00 |    2.10 |       31.50
- INI-FER-010-CJ1000 | FER-010-CJ1000 | Ferretera Central                 | INV-INICIAL  | 2026-11-02 | ÔÇö          |     3.00 |       3.00 |   18.00 |       54.00
- INI-CON-001-BL     | CON-001-BL     | Materiales Santa Ana              | INV-INICIAL  | 2026-11-02 | ÔÇö          |    80.00 |      80.00 |    7.90 |      632.00
- INI-FON-001-UN     | FON-001-UN     | Ferretera Central                 | INV-INICIAL  | 2026-11-02 | ÔÇö          |    45.00 |      45.00 |    2.40 |      108.00
- INI-FON-002-UN     | FON-002-UN     | Ferretera Central                 | INV-INICIAL  | 2026-11-02 | ÔÇö          |   120.00 |     120.00 |    0.18 |       21.60
- INI-FON-002-BL10   | FON-002-BL10   | Ferretera Central                 | INV-INICIAL  | 2026-11-02 | ÔÇö          |    12.00 |      12.00 |    1.60 |       19.20
- INI-HER-001-UN     | HER-001-UN     | Importadora Herramax              | INV-INICIAL  | 2026-11-02 | ÔÇö          |     2.00 |       2.00 |  145.00 |      290.00
- INI-HER-005-UN     | HER-005-UN     | Distribuidora Agr├¡cola La Cosecha | INV-INICIAL  | 2026-11-02 | ÔÇö          |     1.00 |       1.00 |   28.00 |       28.00
- INI-HER-010-UN     | HER-010-UN     | Importadora Herramax              | INV-INICIAL  | 2026-11-02 | ÔÇö          |    25.00 |      25.00 |    4.10 |      102.50
+ INI-FER-001-LB     | FER-001-LB     | Ferretera Central                 | INV-INICIAL  | 2026-11-02 | —          |    24.00 |      24.00 |    0.85 |       20.40
+ INI-FER-001-CJ25   | FER-001-CJ25   | Ferretera Central                 | INV-INICIAL  | 2026-11-02 | —          |    10.00 |      10.00 |   19.50 |      195.00
+ INI-FER-002-LB     | FER-002-LB     | Ferretera Central                 | INV-INICIAL  | 2026-11-02 | —          |    30.00 |      30.00 |    0.85 |       25.50
+ INI-FER-010-BL100  | FER-010-BL100  | Ferretera Central                 | INV-INICIAL  | 2026-11-02 | —          |    15.00 |      15.00 |    2.10 |       31.50
+ INI-FER-010-CJ1000 | FER-010-CJ1000 | Ferretera Central                 | INV-INICIAL  | 2026-11-02 | —          |     3.00 |       3.00 |   18.00 |       54.00
+ INI-CON-001-BL     | CON-001-BL     | Materiales Santa Ana              | INV-INICIAL  | 2026-11-02 | —          |    80.00 |      80.00 |    7.90 |      632.00
+ INI-FON-001-UN     | FON-001-UN     | Ferretera Central                 | INV-INICIAL  | 2026-11-02 | —          |    45.00 |      45.00 |    2.40 |      108.00
+ INI-FON-002-UN     | FON-002-UN     | Ferretera Central                 | INV-INICIAL  | 2026-11-02 | —          |   120.00 |     120.00 |    0.18 |       21.60
+ INI-FON-002-BL10   | FON-002-BL10   | Ferretera Central                 | INV-INICIAL  | 2026-11-02 | —          |    12.00 |      12.00 |    1.60 |       19.20
+ INI-HER-001-UN     | HER-001-UN     | Importadora Herramax              | INV-INICIAL  | 2026-11-02 | —          |     2.00 |       2.00 |  145.00 |      290.00
+ INI-HER-005-UN     | HER-005-UN     | Distribuidora Agrícola La Cosecha | INV-INICIAL  | 2026-11-02 | —          |     1.00 |       1.00 |   28.00 |       28.00
+ INI-HER-010-UN     | HER-010-UN     | Importadora Herramax              | INV-INICIAL  | 2026-11-02 | —          |    25.00 |      25.00 |    4.10 |      102.50
 
 
-=== 6. Dashboard: lotes vencidos o por vencer en 30 d├¡as (hoy = CURRENT_DATE) ===
+=== 6. Dashboard: lotes vencidos o por vencer en 30 días (hoy = CURRENT_DATE) ===
     hoy     |          producto          | presentacion | lot_number | expiration_date | dias | severity 
 ------------+----------------------------+--------------+------------+-----------------+------+----------
- 2026-11-02 | Insecticida l├¡quido Protek | Frasco 1 L   | AV-PK-1123 | 2026-11-20      |   18 | YELLOW
+ 2026-11-04 | Pegamento PVC              | Lata 1/4 gal | L-PV2309   | 2026-10-30      |   -5 | EXPIRED
+ 2026-11-04 | Insecticida líquido Protek | Frasco 1 L   | AV-PK-1123 | 2026-11-14      |   10 | RED
+ 2026-11-04 | Insecticida líquido Protek | Galón        | AV-PK-1201 | 2026-11-19      |   15 | RED
+ 2026-11-04 | Herbicida Limpia           | Frasco 1 L   | AV-LM-0905 | 2026-11-29      |   25 | YELLOW
 
 
 === 7. Restricciones: cada sentencia DEBE ser rechazada ===
  resultado |                        prueba_                        |                                             error_esperado                                              
 -----------+-------------------------------------------------------+---------------------------------------------------------------------------------------------------------
- OK Ô£ô      | Categor├¡a repetida con otras may├║sculas (lower(name)) | 23505 ┬À llave duplicada viola restricci├│n de unicidad ┬½uq_product_categories_name┬╗
- OK Ô£ô      | Tipo de producto repetido (qu├¡mico)                   | 23505 ┬À llave duplicada viola restricci├│n de unicidad ┬½uq_product_types_name┬╗
- OK Ô£ô      | Marca repetida (FERROMAX)                             | 23505 ┬À llave duplicada viola restricci├│n de unicidad ┬½uq_product_brands_name┬╗
- OK Ô£ô      | Modelo repetido en la misma marca                     | 23505 ┬À llave duplicada viola restricci├│n de unicidad ┬½uq_product_models_brand_name┬╗
- OK Ô£ô      | roles.code en min├║sculas                              | 23514 ┬À el nuevo registro para la relaci├│n ┬½roles┬╗ viola la restricci├│n ┬½check┬╗ ┬½ck_roles_code_format┬╗
- OK Ô£ô      | roles.code repetido                                   | 23505 ┬À llave duplicada viola restricci├│n de unicidad ┬½uq_roles_code┬╗
- OK Ô£ô      | username repetido                                     | 23505 ┬À llave duplicada viola restricci├│n de unicidad ┬½uq_users_username┬╗
- OK Ô£ô      | C├│digo de unidad de 11 caracteres (m├íx. 10)           | 22001 ┬À el valor es demasiado largo para el tipo character varying(10)
- OK Ô£ô      | Presentaci├│n con cantidad 0                           | 23514 ┬À el nuevo registro para la relaci├│n ┬½presentations┬╗ viola la restricci├│n ┬½check┬╗ ┬½ck_presentatio
- OK Ô£ô      | Producto con c├│digo repetido                          | 23505 ┬À llave duplicada viola restricci├│n de unicidad ┬½uq_products_code┬╗
- OK Ô£ô      | Producto + presentaci├│n repetidos                     | 23505 ┬À llave duplicada viola restricci├│n de unicidad ┬½uq_product_presentations_product_presentation┬╗
- OK Ô£ô      | Stock m├¡nimo 0                                        | 23514 ┬À el nuevo registro para la relaci├│n ┬½product_presentations┬╗ viola la restricci├│n ┬½check┬╗ ┬½ck_pro
- OK Ô£ô      | Segundo precio vigente en la misma presentaci├│n       | 23505 ┬À llave duplicada viola restricci├│n de unicidad ┬½uq_product_prices_current┬╗
- OK Ô£ô      | Precio 0                                              | 23514 ┬À el nuevo registro para la relaci├│n ┬½product_prices┬╗ viola la restricci├│n ┬½check┬╗ ┬½ck_product_pr
- OK Ô£ô      | end_date anterior a start_date                        | 23514 ┬À el nuevo registro para la relaci├│n ┬½product_prices┬╗ viola la restricci├│n ┬½check┬╗ ┬½ck_product_pr
- OK Ô£ô      | NIT de 18 caracteres (m├íx. 17)                        | 22001 ┬À el valor es demasiado largo para el tipo character varying(17)
- OK Ô£ô      | NRC de 11 caracteres (m├íx. 10)                        | 22001 ┬À el valor es demasiado largo para el tipo character varying(10)
- OK Ô£ô      | NIT repetido                                          | 23505 ┬À llave duplicada viola restricci├│n de unicidad ┬½uq_suppliers_nit┬╗
- OK Ô£ô      | Correo de proveedor repetido con may├║sculas           | 23505 ┬À llave duplicada viola restricci├│n de unicidad ┬½uq_suppliers_email┬╗
- OK Ô£ô      | D├¡as de cr├®dito negativos                             | 23514 ┬À el nuevo registro para la relaci├│n ┬½suppliers┬╗ viola la restricci├│n ┬½check┬╗ ┬½ck_suppliers_credi
- OK Ô£ô      | Lote: disponible mayor que recibido                   | 23514 ┬À el nuevo registro para la relaci├│n ┬½product_lots┬╗ viola la restricci├│n ┬½check┬╗ ┬½ck_product_lots
- OK Ô£ô      | Lote: disponible negativo                             | 23514 ┬À el nuevo registro para la relaci├│n ┬½product_lots┬╗ viola la restricci├│n ┬½check┬╗ ┬½ck_product_lots
- OK Ô£ô      | Lote: cantidad recibida 0                             | 23514 ┬À el nuevo registro para la relaci├│n ┬½product_lots┬╗ viola la restricci├│n ┬½check┬╗ ┬½ck_product_lots
- OK Ô£ô      | Lote: costo unitario negativo                         | 23514 ┬À el nuevo registro para la relaci├│n ┬½product_lots┬╗ viola la restricci├│n ┬½check┬╗ ┬½ck_product_lots
- OK Ô£ô      | Lote: vencimiento igual a la fecha de ingreso         | 23514 ┬À el nuevo registro para la relaci├│n ┬½product_lots┬╗ viola la restricci├│n ┬½check┬╗ ┬½ck_product_lots
- OK Ô£ô      | Lote repetido (proveedor + lote + presentaci├│n)       | 23505 ┬À llave duplicada viola restricci├│n de unicidad ┬½uq_product_lots_supplier_lot_pp┬╗
- OK Ô£ô      | Notas de 201 caracteres (m├íx. 200)                    | 22001 ┬À el valor es demasiado largo para el tipo character varying(200)
- OK Ô£ô      | Enviar total_cost (columna generada)                  | 428C9 ┬À la columna ┬½total_cost┬╗ s├│lo puede actualizarse a DEFAULT
- OK Ô£ô      | FK inexistente (proveedor 999)                        | 23503 ┬À inserci├│n o actualizaci├│n en la tabla ┬½product_lots┬╗ viola la llave for├ínea ┬½fk_product_lots_su
+ OK ✓      | Categoría repetida con otras mayúsculas (lower(name)) | 23505 · llave duplicada viola restricción de unicidad «uq_product_categories_name»
+ OK ✓      | Tipo de producto repetido (químico)                   | 23505 · llave duplicada viola restricción de unicidad «uq_product_types_name»
+ OK ✓      | Marca repetida (FERROMAX)                             | 23505 · llave duplicada viola restricción de unicidad «uq_product_brands_name»
+ OK ✓      | Modelo repetido en la misma marca                     | 23505 · llave duplicada viola restricción de unicidad «uq_product_models_brand_name»
+ OK ✓      | roles.code en minúsculas                              | 23514 · el nuevo registro para la relación «roles» viola la restricción «check» «ck_roles_code_format»
+ OK ✓      | roles.code repetido                                   | 23505 · llave duplicada viola restricción de unicidad «uq_roles_code»
+ OK ✓      | username repetido                                     | 23505 · llave duplicada viola restricción de unicidad «uq_users_username»
+ OK ✓      | Código de unidad de 11 caracteres (máx. 10)           | 22001 · el valor es demasiado largo para el tipo character varying(10)
+ OK ✓      | Presentación con cantidad 0                           | 23514 · el nuevo registro para la relación «presentations» viola la restricción «check» «ck_presentatio
+ OK ✓      | Producto con código repetido                          | 23505 · llave duplicada viola restricción de unicidad «uq_products_code»
+ OK ✓      | Producto + presentación repetidos                     | 23505 · llave duplicada viola restricción de unicidad «uq_product_presentations_product_presentation»
+ OK ✓      | Stock mínimo 0                                        | 23514 · el nuevo registro para la relación «product_presentations» viola la restricción «check» «ck_pro
+ OK ✓      | Segundo precio vigente en la misma presentación       | 23505 · llave duplicada viola restricción de unicidad «uq_product_prices_current»
+ OK ✓      | Precio 0                                              | 23514 · el nuevo registro para la relación «product_prices» viola la restricción «check» «ck_product_pr
+ OK ✓      | end_date anterior a start_date                        | 23514 · el nuevo registro para la relación «product_prices» viola la restricción «check» «ck_product_pr
+ OK ✓      | NIT de 18 caracteres (máx. 17)                        | 22001 · el valor es demasiado largo para el tipo character varying(17)
+ OK ✓      | NRC de 11 caracteres (máx. 10)                        | 22001 · el valor es demasiado largo para el tipo character varying(10)
+ OK ✓      | NIT repetido                                          | 23505 · llave duplicada viola restricción de unicidad «uq_suppliers_nit»
+ OK ✓      | Correo de proveedor repetido con mayúsculas           | 23505 · llave duplicada viola restricción de unicidad «uq_suppliers_email»
+ OK ✓      | Días de crédito negativos                             | 23514 · el nuevo registro para la relación «suppliers» viola la restricción «check» «ck_suppliers_credi
+ OK ✓      | Lote: disponible mayor que recibido                   | 23514 · el nuevo registro para la relación «product_lots» viola la restricción «check» «ck_product_lots
+ OK ✓      | Lote: disponible negativo                             | 23514 · el nuevo registro para la relación «product_lots» viola la restricción «check» «ck_product_lots
+ OK ✓      | Lote: cantidad recibida 0                             | 23514 · el nuevo registro para la relación «product_lots» viola la restricción «check» «ck_product_lots
+ OK ✓      | Lote: costo unitario negativo                         | 23514 · el nuevo registro para la relación «product_lots» viola la restricción «check» «ck_product_lots
+ OK ✓      | Lote: vencimiento igual a la fecha de ingreso         | 23514 · el nuevo registro para la relación «product_lots» viola la restricción «check» «ck_product_lots
+ OK ✓      | Lote repetido (proveedor + lote + presentación)       | 23505 · llave duplicada viola restricción de unicidad «uq_product_lots_supplier_lot_pp»
+ OK ✓      | Notas de 201 caracteres (máx. 200)                    | 22001 · el valor es demasiado largo para el tipo character varying(200)
+ OK ✓      | Enviar total_cost (columna generada)                  | 428C9 · la columna «total_cost» sólo puede actualizarse a DEFAULT
+ OK ✓      | FK inexistente (proveedor 999)                        | 23503 · inserción o actualización en la tabla «product_lots» viola la llave foránea «fk_product_lots_su
 
 
-=== 8. Casos que S├ì deben aceptarse ===
+=== 8. Casos que SÍ deben aceptarse ===
  lot_number | presentaciones 
 ------------+----------------
  CF-2408    |              2
