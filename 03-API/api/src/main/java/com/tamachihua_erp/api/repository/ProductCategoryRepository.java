@@ -15,8 +15,8 @@ public interface ProductCategoryRepository
     // Spring Data JPA interpreta el nombre del metodo y construye la consulta automáticamente.
     List<ProductCategory> findAllByIsActiveTrueOrderByNameAsc();
 
-    boolean existsByName(String name);
+    boolean existsByNameIgnoreCase(String name);
 
-    boolean existsByNameAndIdNot(String name, Long id);
+    boolean existsByNameIgnoreCaseAndIdNot(String name, Long id);
 }
 
