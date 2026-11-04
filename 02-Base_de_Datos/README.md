@@ -60,6 +60,7 @@ psql -U postgres -d tamachihua_erp -f pruebas/pruebas_T08.sql   # opcional
 ```
 
 - Los dos scripts se pueden volver a ejecutar: `01` borra y crea las 13 tablas; `02` vacía las tablas y reinicia los `id`.
+- **Alertas del dashboard (HU-12):** 4 lotes tienen vencimiento relativo a la fecha en que se ejecuta el seed: `L-PV2309` vencido (`CURRENT_DATE - 5`), `AV-PK-1123` y `AV-PK-1201` en rojo (`+ 10` y `+ 15`) y `AV-LM-0905` en amarillo (`+ 25`). Para que la presentación muestre las tres alertas, **volver a ejecutar `02_seed_data.sql` el 14 o el 15/11**.
 - Usuarios de prueba (contraseña `Tamachihua2026`, BCrypt): `mrivas` (ADMIN), `jmejia` (WAREHOUSE), `kmenjivar` (PURCHASING), `kalvarado` (SELLER) y `layala` (SELLER, inactivo).
 
 ### Cambios del MER v1.6 (S2-02)

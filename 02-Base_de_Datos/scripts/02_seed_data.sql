@@ -33,6 +33,7 @@
 -- Uso:   psql -U <usuario> -d <base> -v ON_ERROR_STOP=1 -f 02_seed_data.sql
 -- AVISO: el bloque 0 vacía las 13 tablas y reinicia los id.
 -- =====================================================================
+SET client_encoding = 'UTF8';   -- el archivo está en UTF-8: evita que Windows (WIN1252) guarde mal las tildes
 
 SET client_min_messages = warning;
 
@@ -314,6 +315,17 @@ INSERT INTO suppliers (trade_name, legal_name, nit, nrc, address, phone, email, 
 --      "Precio unit." de la factura.
 --      [SUPUESTO] invoice_date = fecha de ingreso, salvo CCF-00045821
 --      (21/10/2026), porque el cuaderno no trae la fecha de la factura.
+--
+--      [DEMO] Fechas de vencimiento relativas (pedido del PO, 4/11/2026):
+--      4 lotes vencen respecto a la fecha en que se ejecuta el seed, para
+--      que el dashboard (HU-12) muestre las tres alertas el día de la
+--      presentación. Volver a ejecutar el seed el 14 o el 15/11.
+--        L-PV2309    CURRENT_DATE - 5   EXPIRED (vencido con existencia)
+--        AV-PK-1123  CURRENT_DATE + 10  RED
+--        AV-PK-1201  CURRENT_DATE + 15  RED (límite de la regla 0–15)
+--        AV-LM-0905  CURRENT_DATE + 25  YELLOW
+--      Fechas del cuaderno: L-PV2309 15/03/2027, AV-PK-1123 20/11/2026,
+--      AV-PK-1201 15/01/2027, AV-LM-0905 10/12/2026.
 -- =====================================================================
 INSERT INTO product_lots (product_presentation_id, supplier_id, user_id, lot_number,
                           invoice_number, invoice_date, entry_date, expiration_date,
@@ -325,10 +337,10 @@ FROM (SELECT x.*, row_number() OVER () AS ord FROM (VALUES
   -- [SUPUESTO] libra suelta: sale de un saco abierto del lote CF-2408 (movimiento fuera del alcance).
   --            Recibido = disponible = existencia del Excel; costo derivado 31.00 / 100 lb.
   ('AGR-001-LB',    '0614-150318-102-5', 'CF-2408',         'CCF-00045110', DATE '2026-08-05', DATE '2026-08-05', DATE '2027-06-30', 45.00, 45.00,  0.31, 'Libra suelta de saco abierto del lote CF-2408. Costo derivado: 31.00 / 100 lb.'),
-  ('AGR-010-FR1L',  '0614-150318-102-5', 'AV-PK-1123',      'CCF-00045387', DATE '2026-09-12', DATE '2026-09-12', DATE '2026-11-20', 24.00, 14.00,  6.80, NULL),
-  ('FON-005-LT',    '0614-220909-103-8', 'L-PV2309',        'F-2231',       DATE '2026-09-12', DATE '2026-09-12', DATE '2027-03-15', 24.00, 18.00,  3.75, NULL),
-  ('AGR-011-FR1L',  '0210-020615-101-1', 'AV-LM-0905',      'CF-7781',      DATE '2026-10-02', DATE '2026-10-02', DATE '2026-12-10', 12.00,  9.00,  5.40, NULL),
-  ('AGR-010-GL',    '0210-020615-101-1', 'AV-PK-1201',      'CF-7781',      DATE '2026-10-02', DATE '2026-10-02', DATE '2027-01-15',  6.00,  4.00, 24.50, NULL),
+  ('AGR-010-FR1L',  '0614-150318-102-5', 'AV-PK-1123',      'CCF-00045387', DATE '2026-09-12', DATE '2026-09-12', CURRENT_DATE + 10, 24.00, 14.00,  6.80, NULL),
+  ('FON-005-LT',    '0614-220909-103-8', 'L-PV2309',        'F-2231',       DATE '2026-09-12', DATE '2026-09-12', CURRENT_DATE - 5,  24.00, 18.00,  3.75, NULL),
+  ('AGR-011-FR1L',  '0210-020615-101-1', 'AV-LM-0905',      'CF-7781',      DATE '2026-10-02', DATE '2026-10-02', CURRENT_DATE + 25, 12.00,  9.00,  5.40, NULL),
+  ('AGR-010-GL',    '0210-020615-101-1', 'AV-PK-1201',      'CF-7781',      DATE '2026-10-02', DATE '2026-10-02', CURRENT_DATE + 15,  6.00,  4.00, 24.50, NULL),
   -- Mismo lote PX-2407 en dos presentaciones (galón y cuarto) en la misma factura: caso P-07
   ('PIN-001-GL',    '0614-300417-101-2', 'PX-2407',         'PM-1020',      DATE '2026-10-10', DATE '2026-10-10', DATE '2027-07-31', 12.00, 10.00, 14.20, NULL),
   ('PIN-001-CT',    '0614-300417-101-2', 'PX-2407',         'PM-1020',      DATE '2026-10-10', DATE '2026-10-10', DATE '2027-07-31', 24.00, 16.00,  4.30, NULL),

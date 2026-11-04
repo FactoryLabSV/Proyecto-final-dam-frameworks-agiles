@@ -32,6 +32,7 @@
 -- AVISO: el bloque 0 borra las 13 tablas si ya existen (deja la base
 --        limpia para volver a ejecutar). No lo ejecute sobre datos reales.
 -- =====================================================================
+SET client_encoding = 'UTF8';   -- el archivo está en UTF-8: evita que Windows (WIN1252) guarde mal las tildes
 
 SET client_min_messages = warning;   -- oculta los avisos "does not exist, skipping"
 
