@@ -85,7 +85,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     @Transactional
     public ProductCategoryResponseDto create(ProductCategoryRequestDto dto) {
 
-        if (repository.existsByName(dto.name())) {
+        if (repository.existsByNameIgnoreCase(dto.name())) {
             throw new ResourceConflictException(
                     "Ya existe una categoría con ese nombre"
             );
@@ -108,7 +108,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 
         ProductCategory existingCategory = findCategoryOrThrow(id);
 
-        if (repository.existsByNameAndIdNot(dto.name(), id)) {
+        if (repository.existsByNameIgnoreCaseAndIdNot(dto.name(), id)) {
             throw new ResourceConflictException(
                     "Ya existe otra categoría con ese nombre"
             );

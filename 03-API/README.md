@@ -6,7 +6,7 @@
 
 1. Generar el proyecto en [Spring Initializr](https://start.spring.io) con **Maven** y **Java**, usando la versión estable que ofrezca el sitio.
 2. Dependencias: Spring Web, Spring Data JPA, Validation, Spring Security y **PostgreSQL Driver**.
-3. Descomprimir el proyecto **dentro de esta carpeta** (`03-API/`), de modo que `pom.xml` quede en `03-API/`.
+3. Descomprimir el proyecto **dentro de esta carpeta** (`03-API/`), de modo que `pom.xml` quede en `03-API/api`.
 
 ## Organización por capas
 
@@ -118,9 +118,9 @@ Antes de ejecutar la API, debes contar con la estructura de la base de datos.
 
 Para ello:
 
-1. Solicita o localiza el script SQL oficial proporcionado para el proyecto.
+1. Localiza `02-Base_de_Datos/scripts/` que es donde está el script SQL oficial proporcionado para el proyecto.
 2. Abre pgAdmin.
-3. Selecciona la base de datos `tamachihua_db`.
+3. Selecciona la base de datos `tamachihua_erp`.
 4. Abre la herramienta Query Tool.
 5. Ejecuta el script SQL oficial.
 6. Verifica que las tablas se hayan creado correctamente.
@@ -355,7 +355,7 @@ Para mantener una estructura uniforme y facilitar el trabajo colaborativo, todos
 
 Antes de implementar nuevas funcionalidades, consulta los documentos oficiales del proyecto:
 
-- `API_CONTRACT.md`: contrato de la API, endpoints, formatos de datos y reglas de comunicación.
+- `Diagramas/Endpoints-API.md`: contrato de la API, endpoints, formatos de datos y reglas de comunicación.
 - Script SQL oficial: estructura de la base de datos.
 - Product Backlog: funcionalidades y requerimientos del sistema.
 
