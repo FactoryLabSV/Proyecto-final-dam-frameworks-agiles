@@ -109,7 +109,7 @@ El proyecto utiliza PostgreSQL como sistema gestor de base de datos.
 Desde pgAdmin o desde la terminal de PostgreSQL, crea una base de datos llamada:
 
 ```sql
-CREATE DATABASE tamachihua_db;
+CREATE DATABASE tamachihua_erp;
 ```
 
 ### 4.2. Ejecutar el script SQL oficial
@@ -151,7 +151,7 @@ El proyecto necesita las siguientes variables:
 
 | Variable | Descripción | Ejemplo |
 |---|---|---|
-| `DB_URL` | Dirección de conexión a PostgreSQL | `jdbc:postgresql://localhost:5432/tamachihua_db` |
+| `DB_URL` | Dirección de conexión a PostgreSQL | `jdbc:postgresql://localhost:5432/tamachihua_erp` |
 | `DB_USERNAME` | Usuario de PostgreSQL | `postgres` |
 | `DB_PASSWORD` | Contraseña del usuario | Tu contraseña local |
 
@@ -163,7 +163,7 @@ Cada integrante debe utilizar las credenciales de su propia instalación de Post
 Si utilizas Windows, puedes establecer las variables para la sesión actual de PowerShell:
 
 ```powershell
-$env:DB_URL="jdbc:postgresql://localhost:5432/tamachihua_db"
+$env:DB_URL="jdbc:postgresql://localhost:5432/tamachihua_erp"
 $env:DB_USERNAME="tu_usuario_postgres"
 $env:DB_PASSWORD="tu_contraseña_postgres"
 ```
@@ -181,7 +181,7 @@ Si ejecutas el proyecto desde IntelliJ IDEA, debes configurar las variables en l
 5. Agrega las siguientes variables:
 
 ```text
-DB_URL=jdbc:postgresql://localhost:5432/tamachihua_db
+DB_URL=jdbc:postgresql://localhost:5432/tamachihua_erp
 DB_USERNAME=tu_usuario_postgres
 DB_PASSWORD=tu_contraseña_postgres
 ```
@@ -370,7 +370,7 @@ Para que un nuevo integrante pueda ejecutar el backend, debe seguir este orden:
 1. Instalar Java 21, PostgreSQL y las herramientas necesarias.
 2. Clonar el repositorio de GitHub.
 3. Abrir el proyecto en IntelliJ IDEA.
-4. Crear la base de datos `tamachihua_db`.
+4. Crear la base de datos `tamachihua_erp`.
 5. Ejecutar el script SQL oficial.
 6. Configurar las variables de entorno.
 7. Verificar la configuración de `application.properties`.
@@ -494,7 +494,7 @@ Antes de ejecutar el proyecto, se debe contar con:
 - JDK 21.
 - Maven.
 - PostgreSQL.
-- Una base de datos llamada `tamachihua_db`.
+- Una base de datos llamada `tamachihua_erp`.
 - Git.
 - Postman (para realizar pruebas de los endpoints).
 
@@ -513,7 +513,7 @@ Variables requeridas:
 Ejemplo de configuración local en Linux:
 
 ```bash
-export DB_URL="jdbc:postgresql://localhost:5432/tamachihua_db"
+export DB_URL="jdbc:postgresql://localhost:5432/tamachihua_erp"
 export DB_USERNAME="tu_usuario"
 export DB_PASSWORD="tu_contraseña"
 ```
