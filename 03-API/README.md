@@ -609,6 +609,9 @@ Siguen el patrón de categorías: listado paginado (`search`, `isActive`, `page`
 |---|---|---|---|
 | Unidades de medida (HU-05) | `/api/measure-units` | — | `name` (≤ 50) y `code` (≤ 10) únicos sin distinguir mayúsculas. No se desactiva si tiene presentaciones activas (409). |
 | Presentaciones (HU-05) | `/api/presentations` | `measureUnitId` | `quantity` > 0 con 2 decimales; `measureUnitId` debe existir y estar activa (400 con `errors[]`). La respuesta incluye `measureUnit {id, name, code}`. No se desactiva si está asignada a productos activos (409). |
+| Marcas (HU-04) | `/api/brands` | — | `name` (≤ 100) único sin distinguir mayúsculas. No se desactiva si tiene modelos activos (409). |
+| Modelos (HU-04) | `/api/models` | `brandId` (también en `/options?brandId=`) | `name` único **dentro de la misma marca**; `brandId` debe existir y estar activa (400 con `errors[]`). La respuesta incluye `brand {id, name}`. No se desactiva si lo usan productos activos (409). |
+| Tipos de producto | `/api/product-types` | — | Solo `GET /options` (HU-20 aplazada: los tipos vienen en los datos iniciales). |
 
 Reglas comunes:
 
