@@ -601,6 +601,22 @@ La ruta base del módulo es:
 - Se evitarán nombres duplicados de categorías.
 - Las respuestas utilizarán códigos HTTP apropiados.
 
+### 7.1 Otros catálogos con el mismo patrón (S2-04)
+
+Siguen el patrón de categorías: listado paginado (`search`, `isActive`, `page`, `size` ≤ 100, `sort`), `GET /options`, `GET /{id}`, `POST` (201 + `Location`), `PUT /{id}` y `PATCH /{id}/status` (204).
+
+| Recurso | Ruta base | Filtros extra | Reglas propias |
+|---|---|---|---|
+| Unidades de medida (HU-05) | `/api/measure-units` | — | `name` (≤ 50) y `code` (≤ 10) únicos sin distinguir mayúsculas. No se desactiva si tiene presentaciones activas (409). |
+| Presentaciones (HU-05) | `/api/presentations` | `measureUnitId` | `quantity` > 0 con 2 decimales; `measureUnitId` debe existir y estar activa (400 con `errors[]`). La respuesta incluye `measureUnit {id, name, code}`. No se desactiva si está asignada a productos activos (409). |
+
+Reglas comunes:
+
+- Un id del cuerpo que no existe o está inactivo responde **400** con `errors: [{ field, message }]` (`InvalidFieldException`).
+- Nombre repetido o desactivar un registro con hijos activos responde **409**.
+- El cuerpo de `PATCH /{id}/status` es `{ "isActive": false }` (`StatusRequestDto`).
+- Pruebas: carpetas de cada recurso en `Postman/Tamachihua_erp.postman_collection.json`.
+
 ## 8. Seguridad y autorización
 
 La API incorporará Spring Security y JWT para proteger los endpoints que requieran autenticación.
