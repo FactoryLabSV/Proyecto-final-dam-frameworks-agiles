@@ -38,6 +38,13 @@ public class AuthController {
 
         List<String> roles = jwt.getClaimAsStringList("roles");
 
+        if (userId == null || roles == null || roles.size() != 1
+                || roles.get(0).isBlank()) {
+            throw new org.springframework.security.authentication.BadCredentialsException(
+                    "Token inválido"
+            );
+        }
+
         UserAuthResponseDto response = new UserAuthResponseDto(
                 userId.longValue(),
                 jwt.getSubject(),

@@ -33,7 +33,7 @@ public class SecurityErrorWriter {
 
         Map<String, Object> body = new LinkedHashMap<>();
 
-        body.put("timestamp", LocalDateTime.now());
+        body.put("timestamp", LocalDateTime.now().toString());
         body.put("status", status);
         body.put("error", error);
         body.put("message", message);

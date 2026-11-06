@@ -126,16 +126,47 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
+                        // Autenticación
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/api/auth/login"
                         ).permitAll()
+
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/auth/me"
+                        ).authenticated()
+
+                        // Roles: únicamente ADMIN
                         .requestMatchers("/api/roles/**")
                         .hasRole("ADMIN")
-                        .requestMatchers("/api/categories/**")
-                        .hasRole("WAREHOUSE")
-                        .anyRequest()
-                        .authenticated()
+
+                        // Categorías: lectura
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/categories",
+                                "/api/categories/**"
+                        ).hasAnyRole("ADMIN", "WAREHOUSE", "PURCHASING")
+
+                        // Categorías: escritura
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/categories",
+                                "/api/categories/**"
+                        ).hasRole("ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/api/categories/**"
+                        ).hasRole("ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.PATCH,
+                                "/api/categories/**"
+                        ).hasRole("ADMIN")
+
+                        // Cualquier otro endpoint requiere autenticación
+                        .anyRequest().authenticated()
                 )
 
                 .oauth2ResourceServer(oauth2 -> oauth2

@@ -17,13 +17,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import javax.naming.AuthenticationException;
+import org.springframework.security.core.AuthenticationException;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestControllerAdvice
@@ -226,22 +223,23 @@ public class GlobalExceptionHandler {
         return null;
     }
 
+    // 10. Error de autenticación: HTTP 401
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Map<String, Object>> handleAuthenticationException(
+    public ResponseEntity<ApiErrorResponseDto> handleAuthenticationException(
             AuthenticationException ex,
             HttpServletRequest request
     ) {
-
-        Map<String, Object> body = new LinkedHashMap<>();
-
-        body.put("timestamp", LocalDateTime.now());
-        body.put("status", 401);
-        body.put("error", "UNAUTHORIZED");
-        body.put("message", "Credenciales inválidas");
-        body.put("path", request.getRequestURI());
+        ApiErrorResponseDto response = new ApiErrorResponseDto(
+                Instant.now(),
+                HttpStatus.UNAUTHORIZED.value(),
+                "UNAUTHORIZED",
+                "Credenciales inválidas",
+                request.getRequestURI(),
+                List.of()
+        );
 
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body(body);
+                .body(response);
     }
 }
