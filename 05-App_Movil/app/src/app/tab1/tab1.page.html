@@ -1,15 +1,52 @@
-<ion-header [translucent]="true">
+
+<ion-header>
   <ion-toolbar>
-    <ion-title> Tab 1 </ion-title>
+    <ion-title>TAMACHIHUA-ERP</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <h2>Consulta de productos</h2>
+
+  <p>Buscá un producto por nombre o código.</p>
+
+  <ion-searchbar
+    placeholder="Nombre o código"
+    (ionInput)="buscar($event)"
+    [debounce]="300">
+  </ion-searchbar>
+
+  @for (producto of resultados; track producto.codigo) {
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          {{ producto.nombre }}
+        </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <p><strong>Código:</strong> {{ producto.codigo }}</p>
+
+        <h3>Existencias por presentación</h3>
+
+        @for (presentacion of producto.presentaciones; track presentacion.codigo) {
+          <p>
+            {{ presentacion.nombre }}:
+            {{ presentacion.existencia }} disponibles
+          </p>
+        }
+      </ion-card-content>
+    </ion-card>
+
+  } @empty {
+
+    <div class="ion-text-center ion-padding">
+      <h3>No se encontraron productos</h3>
+      <p>Verificá el nombre o código ingresado.</p>
+    </div>
+
+  }
+
 </ion-content>
