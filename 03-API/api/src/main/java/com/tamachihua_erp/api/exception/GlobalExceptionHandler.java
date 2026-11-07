@@ -79,6 +79,24 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
 
+    // 3.1 Regla de negocio sobre un campo (ej.: measureUnitId inexistente o inactivo): HTTP 400 con errors[]
+    @ExceptionHandler(InvalidFieldException.class)
+    public ResponseEntity<ApiErrorResponseDto> handleInvalidField(
+            InvalidFieldException ex,
+            HttpServletRequest request
+    ) {
+        ApiErrorResponseDto response = new ApiErrorResponseDto(
+                Instant.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "La solicitud contiene datos inválidos",
+                request.getRequestURI(),
+                List.of(new ApiFieldErrorDto(ex.getField(), ex.getMessage()))
+        );
+
+        return ResponseEntity.badRequest().body(response);
+    }
+
     // 4. JSON incorrecto o mal formado: HTTP 400
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiErrorResponseDto> handleUnreadableMessage(

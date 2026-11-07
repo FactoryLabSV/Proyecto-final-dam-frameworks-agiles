@@ -1,19 +1,25 @@
+
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 
 const routes = [
   {
+    // Página principal del proyecto.
     path: '/',
     name: 'home',
     component: HomeView
   },
   {
+    // Página About original.
     path: '/about',
     name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    component: () => import('../views/AboutView.vue')
+  },
+  {
+    // S2-09: Pantalla de Categorías.
+    path: '/categorias',
+    name: 'categorias',
+    component: () => import('../views/CategoriasView.vue')
   }
 ]
 
