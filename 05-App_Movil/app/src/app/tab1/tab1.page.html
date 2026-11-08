@@ -1,4 +1,3 @@
-
 <ion-header>
   <ion-toolbar>
     <ion-title>TAMACHIHUA-ERP</ion-title>
@@ -17,26 +16,43 @@
     [debounce]="300">
   </ion-searchbar>
 
-  @for (producto of resultados; track producto.codigo) {
+  @for (producto of resultados; track producto.code) {
 
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>
-          {{ producto.nombre }}
-        </ion-card-title>
-      </ion-card-header>
+    <ion-card
+  button="true"
+  (click)="verDetalle(producto)">
 
       <ion-card-content>
-        <p><strong>Código:</strong> {{ producto.codigo }}</p>
+
+        <p><strong>Código:</strong> {{ producto.code }}</p>
+
+        <p><strong>Categoría:</strong> {{ producto.categoryName }}</p>
 
         <h3>Existencias por presentación</h3>
 
-        @for (presentacion of producto.presentaciones; track presentacion.codigo) {
+        @for (presentacion of producto.stock; track presentacion.presentationName) {
+
           <p>
-            {{ presentacion.nombre }}:
-            {{ presentacion.existencia }} disponibles
-          </p>
+            <strong>{{ presentacion.presentationName }}:</strong>
+            {{ presentacion.stock }} disponibles
+
+            
+          @if (presentacion.stockStatus === 'OK') {
+            <ion-badge color="success">OK</ion-badge>
         }
+
+          @if (presentacion.stockStatus === 'LOW') {
+            <ion-badge color="warning">Bajo</ion-badge>
+    }
+
+@if (presentacion.stockStatus === 'OUT') {
+  <ion-badge color="danger">Agotado</ion-badge>
+}
+
+          </p>
+
+        }
+
       </ion-card-content>
     </ion-card>
 
