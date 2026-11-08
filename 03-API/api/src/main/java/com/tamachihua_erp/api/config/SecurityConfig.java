@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,6 +28,9 @@ import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -42,7 +47,6 @@ public class SecurityConfig {
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-
         DaoAuthenticationProvider provider =
                 new DaoAuthenticationProvider(userDetailsService);
 
@@ -63,7 +67,6 @@ public class SecurityConfig {
     public SecretKey jwtSecretKey(
             @Value("${app.jwt.secret}") String secret
     ) {
-
         byte[] keyBytes = Base64.getDecoder().decode(secret);
 
         if (keyBytes.length < 32) {
@@ -84,7 +87,6 @@ public class SecurityConfig {
 
     @Bean
     public JwtDecoder jwtDecoder(SecretKey jwtSecretKey) {
-
         return NimbusJwtDecoder
                 .withSecretKey(jwtSecretKey)
                 .macAlgorithm(MacAlgorithm.HS256)
@@ -94,7 +96,6 @@ public class SecurityConfig {
     // Convierte el claim roles en autoridades de Spring Security
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
-
         JwtGrantedAuthoritiesConverter authoritiesConverter =
                 new JwtGrantedAuthoritiesConverter();
 
@@ -109,6 +110,37 @@ public class SecurityConfig {
         return converter;
     }
 
+    // Configuración CORS para el panel web y la aplicación móvil
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOrigins(List.of(
+                "http://localhost:8100", // app (Ionic + angular)
+                "http://localhost:8081" // web (Vue)
+        ));
+
+        configuration.setAllowedMethods(List.of(
+                "GET",
+                "POST",
+                "PUT",
+                "PATCH",
+                "OPTIONS"
+        ));
+
+        configuration.setAllowedHeaders(List.of(
+                "Authorization",
+                "Content-Type"
+        ));
+
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
@@ -118,6 +150,9 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
 
+                // Habilitar CORS
+                .cors(Customizer.withDefaults())
+
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
@@ -126,43 +161,59 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
-                        // Autenticación
+                        // Login público
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/api/auth/login"
                         ).permitAll()
 
+                        // Información del usuario autenticado
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/api/auth/me"
                         ).authenticated()
 
-                        // Roles: únicamente ADMIN
-                        .requestMatchers("/api/roles/**")
-                        .hasRole("ADMIN")
+                        // Rutas de la aplicación móvil.
+                        // Temporalmente públicas hasta HU-17.
+                        .requestMatchers("/api/app/**").permitAll()
 
-                        // Categorías: lectura
+                        // Roles: únicamente ADMIN
+                        .requestMatchers(
+                                "/api/roles",
+                                "/api/roles/**"
+                        ).hasRole("ADMIN")
+
+                        // Catálogos: lectura para ADMIN, WAREHOUSE y PURCHASING
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/api/categories",
-                                "/api/categories/**"
+                                "/api/categories/**",
+                                "/api/measure-units",
+                                "/api/measure-units/**",
+                                "/api/presentations",
+                                "/api/presentations/**",
+                                "/api/brands",
+                                "/api/brands/**",
+                                "/api/models",
+                                "/api/models/**",
+                                "/api/product-types",
+                                "/api/product-types/**"
                         ).hasAnyRole("ADMIN", "WAREHOUSE", "PURCHASING")
 
-                        // Categorías: escritura
+                        // Catálogos: cualquier otro metodo requiere ADMIN
                         .requestMatchers(
-                                HttpMethod.POST,
                                 "/api/categories",
-                                "/api/categories/**"
-                        ).hasRole("ADMIN")
-
-                        .requestMatchers(
-                                HttpMethod.PUT,
-                                "/api/categories/**"
-                        ).hasRole("ADMIN")
-
-                        .requestMatchers(
-                                HttpMethod.PATCH,
-                                "/api/categories/**"
+                                "/api/categories/**",
+                                "/api/measure-units",
+                                "/api/measure-units/**",
+                                "/api/presentations",
+                                "/api/presentations/**",
+                                "/api/brands",
+                                "/api/brands/**",
+                                "/api/models",
+                                "/api/models/**",
+                                "/api/product-types",
+                                "/api/product-types/**"
                         ).hasRole("ADMIN")
 
                         // Cualquier otro endpoint requiere autenticación

@@ -70,7 +70,7 @@ public class GlobalExceptionHandler {
         ApiErrorResponseDto response = new ApiErrorResponseDto(
                 Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "VALIDATION_ERROR",
                 "La solicitud contiene datos inválidos",
                 request.getRequestURI(),
                 errors
@@ -88,7 +88,7 @@ public class GlobalExceptionHandler {
         ApiErrorResponseDto response = new ApiErrorResponseDto(
                 Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "VALIDATION_ERROR",
                 "La solicitud contiene datos inválidos",
                 request.getRequestURI(),
                 List.of(new ApiFieldErrorDto(ex.getField(), ex.getMessage()))
@@ -217,7 +217,7 @@ public class GlobalExceptionHandler {
         ApiErrorResponseDto response = new ApiErrorResponseDto(
                 Instant.now(),
                 status.value(),
-                status.getReasonPhrase(),
+                status.name(),
                 message,
                 request.getRequestURI(),
                 List.of()
