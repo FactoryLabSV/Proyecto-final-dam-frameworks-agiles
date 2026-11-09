@@ -59,7 +59,7 @@ Los roles **no son jerárquicos** (HU-17 v1.2): cada endpoint declara explícita
 }
 ```
 
-`error` toma valores: `VALIDATION_ERROR`, `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`, `CONFLICT`, `INTERNAL_ERROR`. `errors[]` solo aparece en 400.
+`error` toma valores: `VALIDATION_ERROR`, `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`, `CONFLICT`, `INTERNAL_SERVER_ERROR`, `BAD_REQUEST`, `METHOD_NOT_ALLOWED`. `errors[]` solo aparece en 400.
 
 ### 1.4 Paginación y orden (listados del panel)
 

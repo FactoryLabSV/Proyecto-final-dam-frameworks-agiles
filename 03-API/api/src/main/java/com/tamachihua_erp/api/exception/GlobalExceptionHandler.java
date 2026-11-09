@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import org.springframework.security.core.AuthenticationException;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.List;
@@ -69,7 +70,7 @@ public class GlobalExceptionHandler {
         ApiErrorResponseDto response = new ApiErrorResponseDto(
                 Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "VALIDATION_ERROR",
                 "La solicitud contiene datos inválidos",
                 request.getRequestURI(),
                 errors
@@ -87,7 +88,7 @@ public class GlobalExceptionHandler {
         ApiErrorResponseDto response = new ApiErrorResponseDto(
                 Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "VALIDATION_ERROR",
                 "La solicitud contiene datos inválidos",
                 request.getRequestURI(),
                 List.of(new ApiFieldErrorDto(ex.getField(), ex.getMessage()))
@@ -216,7 +217,7 @@ public class GlobalExceptionHandler {
         ApiErrorResponseDto response = new ApiErrorResponseDto(
                 Instant.now(),
                 status.value(),
-                status.getReasonPhrase(),
+                status.name(),
                 message,
                 request.getRequestURI(),
                 List.of()
@@ -238,5 +239,25 @@ public class GlobalExceptionHandler {
         }
 
         return null;
+    }
+
+    // 10. Error de autenticación: HTTP 401
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiErrorResponseDto> handleAuthenticationException(
+            AuthenticationException ex,
+            HttpServletRequest request
+    ) {
+        ApiErrorResponseDto response = new ApiErrorResponseDto(
+                Instant.now(),
+                HttpStatus.UNAUTHORIZED.value(),
+                "UNAUTHORIZED",
+                "Credenciales inválidas",
+                request.getRequestURI(),
+                List.of()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(response);
     }
 }

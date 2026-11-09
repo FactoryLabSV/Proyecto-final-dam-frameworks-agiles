@@ -1,4 +1,4 @@
-# 03 · API REST (Java + Spring Boot) - TAMACHIHUA-ERP-API
+# 03-API REST (Java + Spring Boot) - TAMACHIHUA-ERP-API
 
 **Responsable:** Marvin Gómez · **Apoyo:** Ali Velásquez
 
@@ -711,3 +711,272 @@ Para mantener un código consistente entre los integrantes del equipo:
 El contrato oficial de la API define las rutas, estructuras JSON, códigos de respuesta, permisos, paginación y reglas de negocio que deben respetarse durante el desarrollo.
 
 Este documento debe mantenerse actualizado conforme avance la implementación del backend.
+
+
+#CONFIGURACIÓN DE LOGIN CON JWT Y ROLES
+
+## Autenticación y autorización con JWT
+
+La API utiliza **Spring Security y JSON Web Tokens (JWT)** para
+autenticar a los usuarios y controlar el acceso a los endpoints según el
+rol asignado a cada cuenta.
+
+Las contraseñas se almacenan utilizando **BCrypt**. Después de iniciar
+sesión correctamente, el backend genera un token JWT firmado que el
+cliente debe enviar en las solicitudes a endpoints protegidos.
+
+### 1. Configuración de seguridad
+
+La configuración del token se realiza mediante variables de entorno. Se
+debe definir `JWT_SECRET` con una clave secreta segura, codificada en
+Base64 y con una longitud mínima de 32 bytes una vez decodificada.
+
+Ejemplo de configuración en Linux:
+
+``` bash
+export JWT_SECRET="REEMPLAZAR_POR_UN_SECRETO_BASE64_SEGURO"
+```
+
+En `application.properties` se utilizan las siguientes propiedades:
+
+``` properties
+app.jwt.secret=${JWT_SECRET}
+app.jwt.expiration=3600
+```
+
+  -----------------------------------------------------------------------
+  Propiedad                           Descripción
+  ----------------------------------- -----------------------------------
+  `app.jwt.secret`                    Clave utilizada para firmar y
+                                      validar los tokens JWT. Se obtiene
+                                      de la variable de entorno
+                                      `JWT_SECRET`.
+
+  `app.jwt.expiration`                Tiempo de validez del token,
+                                      expresado en segundos. El valor
+                                      establecido es 3600 segundos (1
+                                      hora).
+  -----------------------------------------------------------------------
+
+**Importante:** - Cada entorno debe configurar su propio secreto. - No
+se debe escribir el secreto directamente en el código fuente ni subirlo
+al repositorio. - No se deben compartir tokens ni secretos mediante
+GitHub. - La API no implementa refresh tokens. Cuando el token expira,
+el usuario debe iniciar sesión nuevamente.
+
+### 2. Roles del sistema
+
+La autorización se basa en los roles definidos para el sistema. Los
+roles no son jerárquicos: cada endpoint debe declarar explícitamente qué
+roles pueden acceder.
+
+  Rol            Descripción
+  -------------- ----------------------------
+  `ADMIN`        Administrador del sistema.
+  `WAREHOUSE`    Personal de bodega.
+  `PURCHASING`   Personal de compras.
+  `SELLER`       Personal de ventas.
+
+Los permisos se asignan de acuerdo con la matriz definida en
+`Diagramas/Endpoints-API.md`. No se debe asumir que un rol hereda los
+permisos de otro.
+
+### 3. Endpoints de autenticación
+
+  -------------------------------------------------------------------------
+  Método            Endpoint            Acceso            Descripción
+  ----------------- ------------------- ----------------- -----------------
+  `POST`            `/api/auth/login`   Público           Autentica al
+                                                          usuario y
+                                                          devuelve un JWT.
+
+  `GET`             `/api/auth/me`      Autenticado       Devuelve la
+                                                          información del
+                                                          usuario asociado
+                                                          al token.
+
+  `GET`             `/api/roles`        `ADMIN`           Consulta los
+                                                          roles disponibles
+                                                          para el sistema.
+  -------------------------------------------------------------------------
+
+#### Iniciar sesión
+
+**Solicitud**
+
+`POST /api/auth/login`
+
+``` http
+Content-Type: application/json
+```
+
+``` json
+{
+  "username": "jperez",
+  "password": "TuContraseña"
+}
+```
+
+**Respuesta exitosa --- HTTP 200**
+
+``` json
+{
+  "accessToken": "eyJhbGciOi...",
+  "tokenType": "Bearer",
+  "expiresIn": 3600,
+  "user": {
+    "id": 3,
+    "username": "jperez",
+    "fullName": "Juan Pérez",
+    "role": "WAREHOUSE"
+  }
+}
+```
+
+  -----------------------------------------------------------------------
+  Campo                               Descripción
+  ----------------------------------- -----------------------------------
+  `accessToken`                       Token JWT que debe utilizarse para
+                                      acceder a los endpoints protegidos.
+
+  `tokenType`                         Tipo de autenticación. Su valor es
+                                      `Bearer`.
+
+  `expiresIn`                         Tiempo de expiración del token en
+                                      segundos.
+
+  `user`                              Información básica del usuario
+                                      autenticado y su rol.
+  -----------------------------------------------------------------------
+
+Si el usuario no existe, la contraseña es incorrecta o la cuenta está
+inactiva, la API responde con **HTTP 401** y el mensaje genérico
+`Credenciales inválidas`. No se debe revelar cuál de esas condiciones
+ocurrió.
+
+#### Consultar el usuario autenticado
+
+**Solicitud**
+
+`GET /api/auth/me`
+
+Debe enviarse el token JWT en el encabezado `Authorization`.
+
+Esta operación devuelve la información del usuario asociado al token.
+Requiere autenticación, pero no un rol específico.
+
+#### Consultar roles
+
+**Solicitud**
+
+`GET /api/roles`
+
+Este endpoint requiere el rol `ADMIN` y permite consultar los roles
+disponibles para utilizarlos, por ejemplo, en los formularios de
+administración de usuarios.
+
+### 4. Enviar el token en solicitudes protegidas
+
+Después de iniciar sesión, el cliente debe conservar el `accessToken` y
+enviarlo en el encabezado `Authorization` de cada solicitud que requiera
+autenticación.
+
+Formato:
+
+``` http
+Authorization: Bearer <accessToken>
+```
+
+Ejemplo de consulta:
+
+``` http
+GET /api/categories
+Authorization: Bearer eyJhbGciOi...
+```
+
+En Postman, se puede configurar desde **Authorization → Bearer Token**,
+pegando el valor de `accessToken`.
+
+El cliente debe dejar de utilizar el token cuando expire. Según el
+contrato actual, no existe un endpoint de logout: para cerrar sesión, el
+cliente elimina el token almacenado localmente.
+
+### 5. Autorización y respuestas de seguridad
+
+Spring Security valida el token y comprueba que el rol del usuario tenga
+permiso para acceder al endpoint solicitado.
+
+Los principales escenarios son:
+
+  -----------------------------------------------------------------------
+  Código HTTP             Situación               Descripción
+  ----------------------- ----------------------- -----------------------
+  `401 Unauthorized`      No se envía un token    La solicitud no está
+                          válido, el token expiró autenticada.
+                          o las credenciales de   
+                          inicio de sesión son    
+                          incorrectas.            
+
+  `403 Forbidden`         El usuario está         La solicitud está
+                          autenticado, pero su    autenticada, pero no
+                          rol no tiene permiso    está autorizada.
+                          para realizar la        
+                          operación.              
+  -----------------------------------------------------------------------
+
+Ejemplo de respuesta **HTTP 403**:
+
+``` json
+{
+  "timestamp": "2026-11-06T15:44:41",
+  "status": 403,
+  "error": "FORBIDDEN",
+  "message": "No tienes permisos para realizar esta operación",
+  "path": "/api/categories/2"
+}
+```
+
+Las respuestas de error mantienen el formato definido en
+`Diagramas/Endpoints-API.md`. Para errores de validación HTTP 400 se
+incluye el arreglo `errors` con los campos que presentan problemas.
+
+### 6. Consideraciones de seguridad
+
+-   Las contraseñas se almacenan mediante BCrypt; nunca se devuelven en
+    las respuestas de la API.
+-   El endpoint de login es público; los demás endpoints protegidos
+    requieren un JWT válido.
+-   Los permisos se comprueban según el rol incluido en el token y las
+    reglas configuradas para cada endpoint.
+-   Una cuenta desactivada no puede iniciar nuevas sesiones. Un token
+    emitido antes de la desactivación conserva su validez hasta su
+    expiración, de acuerdo con el contrato de la API.
+-   El identificador del usuario utilizado para operaciones de auditoría
+    debe obtenerse del token, nunca de un valor enviado por el cliente
+    en el cuerpo de la solicitud.
+-   El cliente es responsable de eliminar el token al cerrar sesión.
+
+### 7. Pruebas recomendadas
+
+Las siguientes verificaciones permiten comprobar el flujo de
+autenticación y autorización mediante Postman y las pruebas
+automatizadas:
+
+1.  Iniciar sesión con credenciales correctas y comprobar que se recibe
+    `accessToken`.
+2.  Intentar iniciar sesión con una contraseña incorrecta y comprobar la
+    respuesta HTTP 401.
+3.  Intentar iniciar sesión con un usuario inactivo y comprobar la
+    respuesta HTTP 401 con el mismo mensaje genérico.
+4.  Consultar `/api/auth/me` con un token válido.
+5.  Consultar un endpoint protegido sin token y comprobar la respuesta
+    HTTP 401.
+6.  Consultar un endpoint con un rol autorizado y comprobar que la
+    operación se permite.
+7.  Consultar un endpoint con un rol no autorizado y comprobar la
+    respuesta HTTP 403.
+8.  Comprobar que un token expirado no permite acceder a endpoints
+    protegidos.
+
+Para conocer los permisos específicos de cada recurso, se debe consultar
+la matriz de autorización de `Diagramas/Endpoints-API.md`.
