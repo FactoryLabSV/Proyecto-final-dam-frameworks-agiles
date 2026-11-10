@@ -1248,6 +1248,837 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "products (S2-05 · HU-06)",
+			"description": "Productos del inventario: consulta paginada, detalle con presentaciones, alta, edición y cambio de estado. La existencia se calcula desde los lotes activos.",
+			"item": [
+				{
+					"name": "findAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products?search=&categoryId=&productTypeId=&isActive=&page=0&size=20&sort=name,asc",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": ""
+								},
+								{
+									"key": "categoryId",
+									"value": ""
+								},
+								{
+									"key": "productTypeId",
+									"value": ""
+								},
+								{
+									"key": "isActive",
+									"value": ""
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								},
+								{
+									"key": "sort",
+									"value": "name,asc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findAll búsqueda por código",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products?search=FER-010",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "FER-010"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findAll filtro por categoría",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products?categoryId=4",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products"
+							],
+							"query": [
+								{
+									"key": "categoryId",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products/4",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create 201",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": \"CON-900\",\n    \"name\": \"Producto de ejemplo S2-05\",\n    \"description\": \"Registro de ejemplo\",\n    \"categoryId\": 2,\n    \"productTypeId\": 3,\n    \"productModelId\": 2,\n    \"requiresExpiration\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create 409 (código repetido)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": \"CON-001\",\n    \"name\": \"Código repetido\",\n    \"categoryId\": 2,\n    \"productTypeId\": 3,\n    \"requiresExpiration\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create 400 (categoría inexistente)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": \"CON-901\",\n    \"name\": \"Categoría inexistente\",\n    \"categoryId\": 99999,\n    \"productTypeId\": 3,\n    \"requiresExpiration\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update 200",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products/4",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								"4"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": \"CON-001\",\n    \"name\": \"Cemento gris 42.5 kg\",\n    \"description\": null,\n    \"categoryId\": 2,\n    \"productTypeId\": 3,\n    \"productModelId\": 2,\n    \"requiresExpiration\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update 409 (requiresExpiration con lotes activos)",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products/8",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								"8"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": \"AGR-001\",\n    \"name\": \"Fertilizante 15-15-15\",\n    \"categoryId\": 4,\n    \"productTypeId\": 1,\n    \"productModelId\": 4,\n    \"requiresExpiration\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "changeStatus 204 (activar)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products/4/status",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								"4",
+								"status"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"isActive\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "product presentations (S2-05 · HU-07)",
+			"description": "Presentaciones de venta de un producto, con stock mínimo. La existencia no se almacena: se suma de los lotes activos.",
+			"item": [
+				{
+					"name": "findAll por producto",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products/4/presentations",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								"4",
+								"presentations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findById (detalle del producto)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products/4",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create 201",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products/4/presentations",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								"4",
+								"presentations"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"presentationId\": 4,\n    \"code\": \"CON-001-B25\",\n    \"minStock\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create 409 (código repetido)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products/4/presentations",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								"4",
+								"presentations"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"presentationId\": 4,\n    \"code\": \"CON-001-BL\",\n    \"minStock\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create 409 (presentación ya asignada)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products/4/presentations",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								"4",
+								"presentations"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"presentationId\": 5,\n    \"code\": \"CON-001-DUP\",\n    \"minStock\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create 400 (minStock 0)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products/4/presentations",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								"4",
+								"presentations"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"presentationId\": 4,\n    \"code\": \"CON-001-B25X\",\n    \"minStock\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update 200",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products/4/presentations/6",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								"4",
+								"presentations",
+								"6"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": \"CON-001-BL\",\n    \"minStock\": 40\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "changeStatus 204 (activar)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products/4/presentations/6/status",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								"4",
+								"presentations",
+								"6",
+								"status"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"isActive\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "product prices (S2-05 · HU-08)",
+			"description": "Cambio de precio con historial. Solo ADMIN. El precio vigente es el que tiene end_date NULL y el usuario sale del token.",
+			"item": [
+				{
+					"name": "findHistory",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products/4/presentations/6/prices",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								"4",
+								"presentations",
+								"6",
+								"prices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "changePrice 201",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products/4/presentations/6/prices",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								"4",
+								"presentations",
+								"6",
+								"prices"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"price\": 10.0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "changePrice 400 (precio 0)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products/4/presentations/6/prices",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								"4",
+								"presentations",
+								"6",
+								"prices"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"price\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "changePrice 404 (presentación inexistente)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products/4/presentations/99999/prices",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								"4",
+								"presentations",
+								"99999",
+								"prices"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"price\": 10.0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "app products (S2-05 · HU-13 y HU-14)",
+			"description": "Consultas públicas de la app móvil: búsqueda y detalle. No exponen costos, mínimos ni proveedores.",
+			"item": [
+				{
+					"name": "search",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/app/products?search=clavo&page=0&size=20&sort=name,asc",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"app",
+								"products"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "clavo"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								},
+								{
+									"key": "sort",
+									"value": "name,asc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search por código de presentación",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/app/products?search=AGR-010-GL",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"app",
+								"products"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "AGR-010-GL"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/app/products/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"app",
+								"products",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findById 404",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/app/products/99999",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"app",
+								"products",
+								"99999"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findById 400 (id no numérico)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/app/products/abc",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"app",
+								"products",
+								"abc"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "app catalogs (S2-05)",
+			"description": "Catálogos activos para los filtros de la app móvil.",
+			"item": [
+				{
+					"name": "categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/app/categories",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"app",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "product-types",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/app/product-types",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"app",
+								"product-types"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [

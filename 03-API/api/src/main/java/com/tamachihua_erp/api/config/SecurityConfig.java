@@ -177,6 +177,29 @@ public class SecurityConfig {
                         // Temporalmente públicas hasta HU-17.
                         .requestMatchers("/api/app/**").permitAll()
 
+                        // Precios de productos: solo ADMIN (HU-08)
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/products/*/presentations/*/prices"
+                        ).hasRole("ADMIN")
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/products/*/presentations/*/prices"
+                        ).hasRole("ADMIN")
+
+                        // Productos: lectura para ADMIN, WAREHOUSE y PURCHASING (HU-06, HU-07)
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/products",
+                                "/api/products/**"
+                        ).hasAnyRole("ADMIN", "WAREHOUSE", "PURCHASING")
+
+                        // Productos y presentaciones: escritura ADMIN y WAREHOUSE (D-06)
+                        .requestMatchers(
+                                "/api/products",
+                                "/api/products/**"
+                        ).hasAnyRole("ADMIN", "WAREHOUSE")
+
                         // Roles: únicamente ADMIN
                         .requestMatchers(
                                 "/api/roles",
