@@ -731,6 +731,11 @@ La configuración del token se realiza mediante variables de entorno. Se
 debe definir `JWT_SECRET` con una clave secreta segura, codificada en
 Base64 y con una longitud mínima de 32 bytes una vez decodificada.
 
+Cómo generar JWT_SECRET (por ejemplo openssl rand -base64 32).
+En application.properties debe existir:
+app.jwt.secret=${JWT_SECRET}
+app.jwt.expiration=3600
+
 Ejemplo de configuración en Linux:
 
 ``` bash
