@@ -1,5 +1,6 @@
 
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   IonHeader,
   IonToolbar,
@@ -9,20 +10,14 @@ import {
   IonCard,
   IonCardHeader,
   IonCardTitle,
-  IonCardContent
+  IonCardContent,
+  IonBadge
 } from '@ionic/angular';
 
-interface Presentacion {
-  codigo: string;
-  nombre: string;
-  existencia: number;
-}
-
-interface Producto {
-  codigo: string;
-  nombre: string;
-  presentaciones: Presentacion[];
-}
+import {
+  Producto,
+  PRODUCTOS_SIMULADOS
+} from '../models/producto';
 
 @Component({
   selector: 'app-tab1',
@@ -37,41 +32,22 @@ interface Producto {
     IonCard,
     IonCardHeader,
     IonCardTitle,
-    IonCardContent
+    IonCardContent,
+    IonBadge
   ],
 })
 export class Tab1Page {
 
-  productos: Producto[] = [
-    {
-      codigo: 'PROD001',
-      nombre: 'Abono granulado',
-      presentaciones: [
-        { codigo: 'AB001', nombre: 'Bolsa 1 kg', existencia: 15 },
-        { codigo: 'AB002', nombre: 'Saco 25 kg', existencia: 4 }
-      ]
-    },
-    {
-      codigo: 'PROD002',
-      nombre: 'Cemento gris',
-      presentaciones: [
-        { codigo: 'CE001', nombre: 'Bolsa 42.5 kg', existencia: 30 }
-      ]
-    },
-    {
-      codigo: 'PROD003',
-      nombre: 'Clavos de acero',
-      presentaciones: [
-        { codigo: 'CL001', nombre: 'Libra', existencia: 20 },
-        { codigo: 'CL002', nombre: 'Caja', existencia: 8 }
-      ]
-    }
-  ];
+  productos: Producto[] = PRODUCTOS_SIMULADOS;
 
   resultados: Producto[] = [];
 
-  constructor() {
+  constructor(private router: Router) {
     this.resultados = this.productos;
+  }
+
+  verDetalle(producto: Producto) {
+    this.router.navigate(['/tabs/tab1/producto', producto.id]);
   }
 
   buscar(event: any) {
@@ -83,16 +59,10 @@ export class Tab1Page {
     }
 
     this.resultados = this.productos.filter(producto => {
-      const nombre = producto.nombre.toLowerCase();
-      const codigo = producto.codigo.toLowerCase();
+      const nombre = producto.name.toLowerCase();
+      const codigo = producto.code.toLowerCase();
 
-      const coincidePresentacion = producto.presentaciones.some(
-        presentacion => presentacion.codigo.toLowerCase() === texto
-      );
-
-      return nombre.includes(texto) ||
-             codigo === texto ||
-             coincidePresentacion;
+      return nombre.includes(texto) || codigo === texto;
     });
   }
 }
