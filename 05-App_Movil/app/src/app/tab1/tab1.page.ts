@@ -1,5 +1,6 @@
+
 import { Component } from '@angular/core';
-import { Router } from '@angular/router'; 
+import { Router } from '@angular/router';
 import {
   IonHeader,
   IonToolbar,
@@ -7,6 +8,8 @@ import {
   IonContent,
   IonSearchbar,
   IonCard,
+  IonCardHeader,
+  IonCardTitle,
   IonCardContent,
   IonBadge
 } from '@ionic/angular';
@@ -27,9 +30,11 @@ import {
     IonContent,
     IonSearchbar,
     IonCard,
+    IonCardHeader,
+    IonCardTitle,
     IonCardContent,
     IonBadge
-],
+  ],
 })
 export class Tab1Page {
 
@@ -42,8 +47,8 @@ export class Tab1Page {
   }
 
   verDetalle(producto: Producto) {
-  this.router.navigate(['/tabs/tab1/producto', producto.id]);
-}
+    this.router.navigate(['/tabs/tab1/producto', producto.id]);
+  }
 
   buscar(event: any) {
     const texto = (event.detail.value || '').trim().toLowerCase();

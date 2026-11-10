@@ -19,8 +19,12 @@
   @for (producto of resultados; track producto.code) {
 
     <ion-card
-  button="true"
-  (click)="verDetalle(producto)">
+      button="true"
+      (click)="verDetalle(producto)">
+
+      <ion-card-header>
+        <ion-card-title>{{ producto.name }}</ion-card-title>
+      </ion-card-header>
 
       <ion-card-content>
 
@@ -36,19 +40,17 @@
             <strong>{{ presentacion.presentationName }}:</strong>
             {{ presentacion.stock }} disponibles
 
-            
-          @if (presentacion.stockStatus === 'OK') {
-            <ion-badge color="success">OK</ion-badge>
-        }
+            @if (presentacion.stockStatus === 'OK') {
+              <ion-badge color="success">OK</ion-badge>
+            }
 
-          @if (presentacion.stockStatus === 'LOW') {
-            <ion-badge color="warning">Bajo</ion-badge>
-    }
+            @if (presentacion.stockStatus === 'LOW') {
+              <ion-badge color="warning">Bajo</ion-badge>
+            }
 
-@if (presentacion.stockStatus === 'OUT') {
-  <ion-badge color="danger">Agotado</ion-badge>
-}
-
+            @if (presentacion.stockStatus === 'OUT') {
+              <ion-badge color="danger">Agotado</ion-badge>
+            }
           </p>
 
         }
