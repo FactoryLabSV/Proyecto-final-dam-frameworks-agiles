@@ -53,7 +53,7 @@ export default {
   data() {
     return {
       // Ruta relativa mediante el proxy de Vue.
-      // Vue (8080) redirige /api hacia Spring Boot (8081).
+      // Vue (8081) redirige /api hacia Spring Boot (8080).
       apiUrl: '/api/categories',
 
       // Columnas de la tabla.
