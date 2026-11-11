@@ -38,4 +38,10 @@ public interface ProductRepository
 
     // Regla del contrato: no se desactiva una categoría con productos activos
     boolean existsByProductCategoryIdAndIsActiveTrue(Long categoryId);
+
+    // Regla del contrato: no se desactiva un tipo de producto con productos activos
+    boolean existsByProductTypeIdAndIsActiveTrue(Long productTypeId);
+
+    // Dashboard (HU-12): productos activos
+    long countByIsActiveTrue();
 }
