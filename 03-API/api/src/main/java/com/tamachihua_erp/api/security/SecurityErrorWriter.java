@@ -1,15 +1,15 @@
 package com.tamachihua_erp.api.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -17,7 +17,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SecurityErrorWriter {
 
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
 
     public void write(
             HttpServletRequest request,
@@ -33,12 +33,12 @@ public class SecurityErrorWriter {
 
         Map<String, Object> body = new LinkedHashMap<>();
 
-        body.put("timestamp", LocalDateTime.now().toString());
+        body.put("timestamp", Instant.now().toString());
         body.put("status", status);
         body.put("error", error);
         body.put("message", message);
         body.put("path", request.getRequestURI());
 
-        objectMapper.writeValue(response.getOutputStream(), body);
+        jsonMapper.writeValue(response.getOutputStream(), body);
     }
 }

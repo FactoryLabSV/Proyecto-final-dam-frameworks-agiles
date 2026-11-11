@@ -7,6 +7,7 @@ import com.tamachihua_erp.api.exception.ResourceNotFoundException;
 import com.tamachihua_erp.api.exception.ResourceConflictException;
 import com.tamachihua_erp.api.mapper.ProductCategoryMapper;
 import com.tamachihua_erp.api.repository.ProductCategoryRepository;
+import com.tamachihua_erp.api.repository.ProductRepository;
 import com.tamachihua_erp.api.service.ProductCategoryService;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import java.util.List;
 public class ProductCategoryServiceImpl implements ProductCategoryService {
 
     private final ProductCategoryRepository repository;
+    private final ProductRepository productRepository;
     private final ProductCategoryMapper mapper;
 
     // Consultar categorías con filtros y paginación
@@ -128,6 +130,14 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     public void changeStatus(Long id, Boolean isActive) {
 
         ProductCategory category = findCategoryOrThrow(id);
+
+        // No se desactiva una categoría que tenga productos activos (409)
+        if (Boolean.FALSE.equals(isActive)
+                && productRepository.existsByProductCategoryIdAndIsActiveTrue(id)) {
+            throw new ResourceConflictException(
+                    "No se puede desactivar la categoría porque tiene productos activos"
+            );
+        }
 
         category.setIsActive(isActive);
 
