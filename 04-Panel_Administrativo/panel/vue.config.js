@@ -14,6 +14,9 @@ module.exports = defineConfig({
     // Puerto del panel administrativo.
     port: 8081,
 
+    // Permite abrir rutas del Vue Router directamente en el navegador.
+    historyApiFallback: true,
+
     // Redirige las solicitudes de la API hacia Spring Boot.
     proxy: {
       '/api': {
