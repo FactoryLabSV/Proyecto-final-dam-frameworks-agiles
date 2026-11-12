@@ -1,6 +1,7 @@
-
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpParams } from '@angular/common/http';
+
 import {
   IonHeader,
   IonToolbar,
@@ -14,10 +15,8 @@ import {
   IonBadge
 } from '@ionic/angular';
 
-import {
-  Producto,
-  PRODUCTOS_SIMULADOS
-} from '../models/producto';
+import { Api } from '../services/api';
+import { Producto } from '../models/producto';
 
 @Component({
   selector: 'app-tab1',
@@ -34,35 +33,47 @@ import {
     IonCardTitle,
     IonCardContent,
     IonBadge
-  ],
+  ]
 })
-export class Tab1Page {
-
-  productos: Producto[] = PRODUCTOS_SIMULADOS;
+export class Tab1Page implements OnInit {
 
   resultados: Producto[] = [];
+  busquedaActual = 0;
 
-  constructor(private router: Router) {
-    this.resultados = this.productos;
+  constructor(
+    private api: Api,
+    private router: Router
+  ) {}
+
+  ngOnInit() {
+    this.cargarProductos('');
+  }
+
+  cargarProductos(texto: string) {
+    const busqueda = ++this.busquedaActual;
+    const params = new HttpParams().set('search', texto);
+
+    this.api.get<{ content: Producto[] }>('app/products', params).subscribe({
+      next: (respuesta) => {
+        if (busqueda === this.busquedaActual) {
+          this.resultados = respuesta.content;
+        }
+      },
+      error: (error) => {
+        if (busqueda === this.busquedaActual) {
+          console.error('Error al cargar productos:', error.message);
+          this.resultados = [];
+        }
+      }
+    });
+  }
+
+  buscar(event: CustomEvent) {
+    const texto = (event.detail.value || '').trim();
+    this.cargarProductos(texto);
   }
 
   verDetalle(producto: Producto) {
     this.router.navigate(['/tabs/tab1/producto', producto.id]);
-  }
-
-  buscar(event: any) {
-    const texto = (event.detail.value || '').trim().toLowerCase();
-
-    if (texto === '') {
-      this.resultados = this.productos;
-      return;
-    }
-
-    this.resultados = this.productos.filter(producto => {
-      const nombre = producto.name.toLowerCase();
-      const codigo = producto.code.toLowerCase();
-
-      return nombre.includes(texto) || codigo === texto;
-    });
   }
 }
