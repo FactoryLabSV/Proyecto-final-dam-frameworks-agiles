@@ -44,6 +44,34 @@ const routes = [
     path: '/modelos',
     name: 'modelos',
     component: () => import('../views/ModelosView.vue')
+  },
+  {
+    // S2-12a: Listado de productos (HU-06)
+    path: '/productos',
+    name: 'productos',
+    component: () => import('../views/ProductosView.vue'),
+    meta: { title: 'Productos' }
+  },
+  {
+    // S2-12a: Registrar producto (HU-06)
+    path: '/productos/nuevo',
+    name: 'producto-nuevo',
+    component: () => import('../views/ProductoFormularioView.vue'),
+    meta: { title: 'Registrar producto' }
+  },
+  {
+    // S2-12a: Editar producto (HU-06)
+    path: '/productos/:id/editar',
+    name: 'producto-editar',
+    component: () => import('../views/ProductoFormularioView.vue'),
+    meta: { title: 'Editar producto' }
+  },
+  {
+    // S2-12a: Detalle del producto y sus presentaciones (HU-07)
+    path: '/productos/:id',
+    name: 'producto-detalle',
+    component: () => import('../views/ProductoDetalleView.vue'),
+    meta: { title: 'Detalle del producto' }
   }
 ]
 
