@@ -1,4 +1,3 @@
-
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpParams } from '@angular/common/http';
@@ -13,7 +12,8 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
-  IonBadge
+  IonBadge,
+  IonAlert
 } from '@ionic/angular';
 
 import { Api } from '../services/api';
@@ -33,13 +33,29 @@ import { Producto } from '../models/producto';
     IonCardHeader,
     IonCardTitle,
     IonCardContent,
-    IonBadge
+    IonBadge,
+    IonAlert
   ]
 })
 export class Tab1Page implements OnInit {
 
   resultados: Producto[] = [];
   busquedaActual = 0;
+  textoBusqueda = '';
+
+  cargando = false;
+  errorConexion = false;
+  mostrarAlerta = false;
+
+  botonesAlerta = [
+    {
+      text: 'Reintentar',
+      handler: () => {
+        this.mostrarAlerta = false;
+        this.cargarProductos(this.textoBusqueda);
+      }
+    }
+  ];
 
   constructor(
     private api: Api,
@@ -52,6 +68,10 @@ export class Tab1Page implements OnInit {
   }
 
   cargarProductos(texto: string) {
+    this.textoBusqueda = texto;
+    this.cargando = true;
+    this.errorConexion = false;
+
     const busqueda = ++this.busquedaActual;
     const params = new HttpParams().set('search', texto);
 
@@ -59,13 +79,21 @@ export class Tab1Page implements OnInit {
       next: (respuesta) => {
         if (busqueda === this.busquedaActual) {
           this.resultados = respuesta.content;
+          this.cargando = false;
+          this.errorConexion = false;
+          this.mostrarAlerta = false;
           this.cdr.markForCheck();
         }
       },
       error: (error) => {
         if (busqueda === this.busquedaActual) {
-          console.error('Error al cargar productos:', error.message);
+          console.error('Error al cargar productos:', error);
+
           this.resultados = [];
+          this.cargando = false;
+          this.errorConexion = true;
+          this.mostrarAlerta = true;
+
           this.cdr.markForCheck();
         }
       }
