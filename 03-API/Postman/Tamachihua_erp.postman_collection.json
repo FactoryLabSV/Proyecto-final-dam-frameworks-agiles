@@ -1224,9 +1224,50 @@
 			]
 		},
 		{
-			"name": "product-types (S2-04 · options)",
-			"description": "Tipos de producto: solo options (HU-20, el mantenimiento, quedó aplazado; los tipos vienen en los datos iniciales).",
+			"name": "product-types (S3 · CRUD)",
+			"description": "Tipos de producto (contrato 4.2). Lectura: ADMIN, WAREHOUSE y PURCHASING; escritura: ADMIN. No se desactiva un tipo con productos activos (409).",
 			"item": [
+				{
+					"name": "findAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/product-types?search=&isActive=&page=0&size=20&sort=name,asc",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"product-types"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": ""
+								},
+								{
+									"key": "isActive",
+									"value": ""
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								},
+								{
+									"key": "sort",
+									"value": "name,asc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
 				{
 					"name": "options",
 					"request": {
@@ -1243,6 +1284,171 @@
 								"product-types",
 								"options"
 							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/product-types/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"product-types",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create 201",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/product-types",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"product-types"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Accesorio\",\n    \"description\": \"Accesorios y complementos.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create 409 (nombre repetido)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/product-types",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"product-types"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Insumo\",\n    \"description\": \"Nombre que ya existe en los datos iniciales.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update 200",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/product-types/4",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"product-types",
+								"4"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Químico\",\n    \"description\": \"Productos químicos: fertilizantes, plaguicidas, pegamentos y pinturas.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "changeStatus 409 (tiene productos activos)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/product-types/1/status",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"product-types",
+								"1",
+								"status"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"isActive\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "changeStatus 204 (reactivar)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/product-types/1/status",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"product-types",
+								"1",
+								"status"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"isActive\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						}
 					},
 					"response": []
@@ -1895,6 +2101,954 @@
 									"language": "json"
 								}
 							}
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users (S3 · HU-02)",
+			"description": "Gestión de usuarios del panel. Todos los endpoints requieren rol ADMIN. El username no se edita y la contraseña nunca se devuelve.",
+			"item": [
+				{
+					"name": "findAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/users?search=&roleId=&isActive=&page=0&size=20&sort=username,asc",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": ""
+								},
+								{
+									"key": "roleId",
+									"value": ""
+								},
+								{
+									"key": "isActive",
+									"value": ""
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								},
+								{
+									"key": "sort",
+									"value": "username,asc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findAll filtro por rol (SELLER)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/users?roleId=4",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users"
+							],
+							"query": [
+								{
+									"key": "roleId",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/users/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create 201",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/users",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"usuario.prueba\",\n    \"password\": \"Tamachihua2026\",\n    \"fullName\": \"Usuario de Prueba\",\n    \"email\": \"usuario.prueba@elprogreso.example\",\n    \"roleId\": 4\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create 409 (username repetido)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/users",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"mrivas\",\n    \"password\": \"Tamachihua2026\",\n    \"fullName\": \"Nombre Duplicado\",\n    \"email\": \"nombre.duplicado@elprogreso.example\",\n    \"roleId\": 4\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create 400 (rol inexistente)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/users",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"usuario.sin.rol\",\n    \"password\": \"Tamachihua2026\",\n    \"fullName\": \"Usuario Sin Rol\",\n    \"email\": \"usuario.sin.rol@elprogreso.example\",\n    \"roleId\": 99999\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update 200",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/users/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"2"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"José Antonio Mejía\",\n    \"email\": \"jmejia@elprogreso.example\",\n    \"roleId\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "changeStatus 204 (usuario inactivo)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/users/5/status",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"5",
+								"status"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"isActive\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "changeStatus 409 (el ADMIN no puede desactivarse a sí mismo)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/users/1/status",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"1",
+								"status"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"isActive\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "suppliers (S3 · HU-09)",
+			"description": "Proveedores (contrato 6). Roles: ADMIN y PURCHASING. NIT, NRC y correo son únicos.",
+			"item": [
+				{
+					"name": "findAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/suppliers?search=&isActive=&page=0&size=20&sort=tradeName,asc",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"suppliers"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": ""
+								},
+								{
+									"key": "isActive",
+									"value": ""
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								},
+								{
+									"key": "sort",
+									"value": "tradeName,asc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "options",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/suppliers/options",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"suppliers",
+								"options"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/suppliers/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"suppliers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create 201",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/suppliers",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"suppliers"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tradeName\": \"Proveedor de Prueba\",\n    \"legalName\": \"Proveedor de Prueba, S.A. de C.V.\",\n    \"nit\": \"01234567-8\",\n    \"nrc\": \"123456-7\",\n    \"address\": \"Calle de Prueba 123, Santa Tecla\",\n    \"phone\": \"2222-0000\",\n    \"email\": \"proveedor.prueba@example.com\",\n    \"creditDays\": 15\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create 409 (NIT repetido)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/suppliers",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"suppliers"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tradeName\": \"Proveedor Duplicado\",\n    \"legalName\": \"Proveedor Duplicado, S.A. de C.V.\",\n    \"nit\": \"0614-150318-102-5\",\n    \"creditDays\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create 400 (NIT con formato inválido)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/suppliers",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"suppliers"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tradeName\": \"Proveedor Inválido\",\n    \"legalName\": \"Proveedor Inválido, S.A. de C.V.\",\n    \"nit\": \"123\",\n    \"creditDays\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update 200",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/suppliers/6",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"suppliers",
+								"6"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tradeName\": \"Pinturas y Más\",\n    \"legalName\": \"Pinturas y Más, S.A. de C.V.\",\n    \"nit\": \"0614-300417-101-2\",\n    \"nrc\": \"256600-1\",\n    \"address\": \"Av. Las Palmas 44, Santa Tecla\",\n    \"phone\": \"2260-4141\",\n    \"email\": \"pinturasymas@correo.example\",\n    \"creditDays\": 30\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "changeStatus 204 (reactivar)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/suppliers/6/status",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"suppliers",
+								"6",
+								"status"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"isActive\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "lots (S3 · HU-10 y HU-11)",
+			"description": "Lotes (contrato 7). Consulta: ADMIN, WAREHOUSE y PURCHASING. Registrar y corregir cantidad: ADMIN y WAREHOUSE. unitCost y totalCost solo aparecen para ADMIN y PURCHASING.",
+			"item": [
+				{
+					"name": "findAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/lots?productId=&supplierId=&invoiceNumber=&onlyAvailable=&page=0&size=20&sort=expirationDate,asc",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"lots"
+							],
+							"query": [
+								{
+									"key": "productId",
+									"value": ""
+								},
+								{
+									"key": "supplierId",
+									"value": ""
+								},
+								{
+									"key": "invoiceNumber",
+									"value": ""
+								},
+								{
+									"key": "onlyAvailable",
+									"value": ""
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								},
+								{
+									"key": "sort",
+									"value": "expirationDate,asc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findAll filtro por producto",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/lots?productId=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"lots"
+							],
+							"query": [
+								{
+									"key": "productId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findAll filtro por proveedor",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/lots?supplierId=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"lots"
+							],
+							"query": [
+								{
+									"key": "supplierId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findAll solo disponibles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/lots?onlyAvailable=true",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"lots"
+							],
+							"query": [
+								{
+									"key": "onlyAvailable",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/lots/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"lots",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create 201",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/lots",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"lots"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productPresentationId\": 11,\n    \"supplierId\": 1,\n    \"invoiceNumber\": \"CCF-00045999\",\n    \"invoiceDate\": \"2026-11-10\",\n    \"lotNumber\": \"L-PRUEBA-001\",\n    \"receivedQuantity\": 10.0,\n    \"unitCost\": 31.5,\n    \"expirationDate\": \"2027-06-30\",\n    \"notes\": \"Lote de prueba de Postman.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create 409 (lote repetido para el proveedor)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/lots",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"lots"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productPresentationId\": 11,\n    \"supplierId\": 1,\n    \"invoiceNumber\": \"CCF-00045998\",\n    \"invoiceDate\": \"2026-11-10\",\n    \"lotNumber\": \"CF-2408\",\n    \"receivedQuantity\": 10.0,\n    \"unitCost\": 31.5,\n    \"expirationDate\": \"2027-06-30\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create 400 (presentación inexistente)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/lots",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"lots"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productPresentationId\": 99999,\n    \"supplierId\": 1,\n    \"invoiceNumber\": \"CCF-00045997\",\n    \"invoiceDate\": \"2026-11-10\",\n    \"lotNumber\": \"L-PRUEBA-002\",\n    \"receivedQuantity\": 10.0,\n    \"unitCost\": 31.5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create 400 (cantidad recibida 0)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/lots",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"lots"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productPresentationId\": 11,\n    \"supplierId\": 1,\n    \"invoiceNumber\": \"CCF-00045996\",\n    \"invoiceDate\": \"2026-11-10\",\n    \"lotNumber\": \"L-PRUEBA-003\",\n    \"receivedQuantity\": 0,\n    \"unitCost\": 31.5,\n    \"expirationDate\": \"2027-06-30\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateAvailableQuantity 204",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/lots/1/available-quantity",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"lots",
+								"1",
+								"available-quantity"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"availableQuantity\": 22.0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateAvailableQuantity 400 (mayor que la recibida)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/lots/1/available-quantity",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"lots",
+								"1",
+								"available-quantity"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"availableQuantity\": 99999.0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "lastCost",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/products/1/last-cost",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								"1",
+								"last-cost"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "dashboard (S3 · HU-12)",
+			"description": "Indicadores y alertas del inventario. summary y expiring-lots: ADMIN y WAREHOUSE; low-stock incluye también a PURCHASING.",
+			"item": [
+				{
+					"name": "summary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/dashboard/summary",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"dashboard",
+								"summary"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "low-stock",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/dashboard/low-stock?page=0&size=20",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"dashboard",
+								"low-stock"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "low-stock página 2",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/dashboard/low-stock?page=1&size=5",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"dashboard",
+								"low-stock"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "expiring-lots",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/dashboard/expiring-lots",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"dashboard",
+								"expiring-lots"
+							]
 						}
 					},
 					"response": []
