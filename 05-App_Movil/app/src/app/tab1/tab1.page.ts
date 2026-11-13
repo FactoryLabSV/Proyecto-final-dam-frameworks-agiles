@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpParams } from '@angular/common/http';
 
@@ -42,7 +43,8 @@ export class Tab1Page implements OnInit {
 
   constructor(
     private api: Api,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -57,12 +59,14 @@ export class Tab1Page implements OnInit {
       next: (respuesta) => {
         if (busqueda === this.busquedaActual) {
           this.resultados = respuesta.content;
+          this.cdr.markForCheck();
         }
       },
       error: (error) => {
         if (busqueda === this.busquedaActual) {
           console.error('Error al cargar productos:', error.message);
           this.resultados = [];
+          this.cdr.markForCheck();
         }
       }
     });
