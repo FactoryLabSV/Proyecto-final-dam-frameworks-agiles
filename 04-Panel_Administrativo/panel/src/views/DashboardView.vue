@@ -115,7 +115,7 @@
 
     <v-row v-if="!errorGeneral">
       <!-- Productos con stock bajo (GET /api/dashboard/low-stock) -->
-      <v-col cols="12" :lg="mostrarLotes ? 6 : 12">
+      <v-col cols="12" :xl="mostrarLotes ? 6 : 12">
         <v-card elevation="2" class="h-100">
           <v-card-title class="d-flex align-center ga-2 pa-4">
             <v-icon icon="mdi-alert" :color="COLORES.amarillo" />
@@ -175,7 +175,7 @@
       </v-col>
 
       <!-- Lotes vencidos y por vencer (GET /api/dashboard/expiring-lots) -->
-      <v-col v-if="mostrarLotes" cols="12" lg="6">
+      <v-col v-if="mostrarLotes" cols="12" xl="6">
         <v-card elevation="2" class="h-100">
           <v-card-title class="d-flex align-center ga-2 pa-4">
             <v-icon icon="mdi-calendar-alert" :color="COLORES.rojo" />
@@ -212,7 +212,7 @@
             </template>
 
             <template #item.daysRemaining="{ item }">
-              {{ describirDias(item.daysRemaining) }}
+              <span class="text-no-wrap">{{ describirDias(item.daysRemaining) }}</span>
             </template>
 
             <!-- Estado calculado por la API (regla D-04) -->
@@ -270,7 +270,7 @@ export default {
       bajoStock: [],
       totalBajoStock: 0,
       paginaBajoStock: 1,
-      tamanoBajoStock: 10,
+      tamanoBajoStock: 5,
       cargandoBajoStock: false,
 
       // Lotes vencidos y por vencer (lista sin paginar).

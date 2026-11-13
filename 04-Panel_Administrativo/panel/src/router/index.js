@@ -17,10 +17,10 @@ const routes = [
     redirect: '/inicio',
     children: [
       {
-        // Inicio después de iniciar sesión (luego será el dashboard)
+        // HU-12: Dashboard (inicio después de iniciar sesión)
         path: 'inicio',
         name: 'home',
-        component: () => import('../views/HomeView.vue'),
+        component: () => import('../views/DashboardView.vue'),
         meta: { title: 'Dashboard' }
       },
       {
