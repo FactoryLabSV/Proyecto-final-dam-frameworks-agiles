@@ -101,19 +101,18 @@ Estas reglas ya están en el archivo `.gitignore`. Si necesitas un archivo de co
 3. Cámbiate a la rama `develop`.
 4. Lee el `README.md` de la carpeta de tu área y sigue sus pasos.
 
--
--## Documentación
--
--> La documentación del sprint en curso (actas, versiones nuevas de los documentos y entregables) está en la rama **`develop`**. En `main` solo está la versión cerrada del último sprint. Para verla en GitHub, elige `develop` en el selector de ramas.
--
--| Documento | Contenido |
--|---|---|
--| 01 – Propuesta de proyecto | Propuesta aprobada en Metodologías Ágiles |
--| 02 – Formulario de asignación (DAM) | Inscripción del proyecto en DAM |
--| 03 – Formato del documento a entregar | Plantilla del documento final |
--| 04 – Contexto, alcance y roles | Problema, visión, alcance, tecnologías y equipo |
--| 05 – Entrevistas de levantamiento de requisitos | Guion y entrevistas a los tipos de usuario |
--| 06 – Consolidado de historias aportadas | Historias identificadas por el equipo y trazabilidad |
--| 07 – Product Backlog | Historias priorizadas, épicas, requisitos no funcionales, DoR y DoD |
--| 08 – Sprint Planning – Sprint 1 | Objetivo, tareas, responsables y agenda del Sprint 1 |
--| 09 – Sprint Planning – Sprint 2 | Objetivo, tareas, fechas y plan de contingencia del Sprint 2 |
+## Documentación
+
+> La documentación del sprint en curso (actas, versiones nuevas de los documentos y entregables) está en la rama **`develop`**. En `main` solo está la versión cerrada del último sprint. Para verla en GitHub, elige `develop` en el selector de ramas.
+
+| Documento | Contenido |
+|---|---|
+| 01 – Propuesta de proyecto | Propuesta aprobada en Metodologías Ágiles |
+| 02 – Formulario de asignación (DAM) | Inscripción del proyecto en DAM |
+| 03 – Formato del documento a entregar | Plantilla del documento final |
+| 04 – Contexto, alcance y roles | Problema, visión, alcance, tecnologías y equipo |
+| 05 – Entrevistas de levantamiento de requisitos | Guion y entrevistas a los tipos de usuario |
+| 06 – Consolidado de historias aportadas | Historias identificadas por el equipo y trazabilidad |
+| 07 – Product Backlog | Historias priorizadas, épicas, requisitos no funcionales, DoR y DoD |
+| 08 – Sprint Planning – Sprint 1 | Objetivo, tareas, responsables y agenda del Sprint 1 |
+| 09 – Sprint Planning – Sprint 2 | Objetivo, tareas, fechas y plan de contingencia del Sprint 2 |
