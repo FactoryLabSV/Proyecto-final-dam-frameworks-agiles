@@ -16,6 +16,27 @@
     [debounce]="300">
   </ion-searchbar>
 
+<ion-item>
+  <ion-select
+    label="Filtrar por categoría"
+    labelPlacement="stacked"
+    placeholder="Todas las categorías"
+    [value]="categoriaSeleccionada"
+    (ionChange)="filtrarCategoria($event)">
+
+    <ion-select-option [value]="null">
+      Todas las categorías
+    </ion-select-option>
+
+    @for (categoria of categorias; track categoria.id) {
+      <ion-select-option [value]="categoria.id">
+        {{ categoria.name }}
+      </ion-select-option>
+    }
+
+  </ion-select>
+</ion-item>
+
   @for (producto of resultados; track producto.code) {
 
     <ion-card

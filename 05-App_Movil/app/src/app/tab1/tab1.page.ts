@@ -1,4 +1,3 @@
-
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpParams } from '@angular/common/http';
@@ -9,15 +8,24 @@ import {
   IonTitle,
   IonContent,
   IonSearchbar,
+  IonSelect,
+  IonSelectOption,
   IonCard,
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
-  IonBadge
+  IonBadge,
+  IonItem
+
 } from '@ionic/angular';
 
 import { Api } from '../services/api';
 import { Producto } from '../models/producto';
+
+interface Categoria {
+  id: number;
+  name: string;
+}
 
 @Component({
   selector: 'app-tab1',
@@ -29,16 +37,23 @@ import { Producto } from '../models/producto';
     IonTitle,
     IonContent,
     IonSearchbar,
+    IonSelect,
+    IonSelectOption,
     IonCard,
     IonCardHeader,
     IonCardTitle,
     IonCardContent,
-    IonBadge
+    IonBadge,
+    IonItem
   ]
 })
 export class Tab1Page implements OnInit {
 
   resultados: Producto[] = [];
+  categorias: Categoria[] = [];
+
+  textoBusqueda = '';
+  categoriaSeleccionada: number | null = null;
   busquedaActual = 0;
 
   constructor(
@@ -48,12 +63,31 @@ export class Tab1Page implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.cargarProductos('');
+    this.cargarCategorias();
+    this.cargarProductos();
   }
 
-  cargarProductos(texto: string) {
+  cargarCategorias() {
+    this.api.get<Categoria[]>('app/categories').subscribe({
+      next: (respuesta) => {
+        this.categorias = respuesta;
+        this.cdr.markForCheck();
+      },
+      error: (error) => {
+        console.error('Error al cargar categorías:', error.message);
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  cargarProductos() {
     const busqueda = ++this.busquedaActual;
-    const params = new HttpParams().set('search', texto);
+
+    let params = new HttpParams().set('search', this.textoBusqueda);
+
+    if (this.categoriaSeleccionada !== null) {
+      params = params.set('categoryId', this.categoriaSeleccionada);
+    }
 
     this.api.get<{ content: Producto[] }>('app/products', params).subscribe({
       next: (respuesta) => {
@@ -73,8 +107,13 @@ export class Tab1Page implements OnInit {
   }
 
   buscar(event: CustomEvent) {
-    const texto = (event.detail.value || '').trim();
-    this.cargarProductos(texto);
+    this.textoBusqueda = (event.detail.value || '').trim();
+    this.cargarProductos();
+  }
+
+  filtrarCategoria(event: CustomEvent) {
+    this.categoriaSeleccionada = event.detail.value;
+    this.cargarProductos();
   }
 
   verDetalle(producto: Producto) {
