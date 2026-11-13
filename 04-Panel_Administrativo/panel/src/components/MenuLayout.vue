@@ -11,7 +11,7 @@
         {{ userRoleText }}
       </v-btn>
 
-      <!-- Menú desplegable de Perfil / Logout -->
+      <!-- Menú desplegable de Logout -->
       <v-menu activator="#menu-activator">
         <v-list>
           <v-list-item 
@@ -63,56 +63,6 @@
         </v-list>
       </template>
 
-      <!-- SECCIÓN: INVENTARIO -->
-      <template v-if="filteredInventario.length > 0">
-        <v-divider></v-divider>
-        <v-list-item><b>INVENTARIO</b></v-list-item>
-        <v-divider></v-divider>
-        <v-list density="compact" nav>
-          <v-list-item
-            v-for="item in filteredInventario"
-            :key="item.value"
-            :prepend-icon="item.icon"
-            :title="item.title"
-            :to="item.path"
-            id="v-list-item1"
-          ></v-list-item>
-        </v-list>
-      </template>
-
-      <!-- SECCIÓN: PROVEEDORES -->
-      <template v-if="filteredProveedores.length > 0">
-        <v-divider></v-divider>
-        <v-list-item><b>PROVEEDORES</b></v-list-item>
-        <v-divider></v-divider>
-        <v-list density="compact" nav>
-          <v-list-item
-            v-for="item in filteredProveedores"
-            :key="item.value"
-            :prepend-icon="item.icon"
-            :title="item.title"
-            :to="item.path"
-            id="v-list-item1"
-          ></v-list-item>
-        </v-list>
-      </template>
-
-      <!-- SECCIÓN: SEGURIDAD -->
-      <template v-if="filteredSeguridad.length > 0">
-        <v-divider></v-divider>
-        <v-list-item><b>SEGURIDAD</b></v-list-item>
-        <v-divider></v-divider>
-        <v-list density="compact" nav>
-          <v-list-item
-            v-for="item in filteredSeguridad"
-            :key="item.value"
-            :prepend-icon="item.icon"
-            :title="item.title"
-            :to="item.path"
-            id="v-list-item1"
-          ></v-list-item>
-        </v-list>
-      </template>
     </v-navigation-drawer>
 
     <!-- 3. Contenedor Principal de Vistas -->
@@ -133,7 +83,7 @@ const router = useRouter();
 // Obtener usuario del localStorage para definir permisos
 const userStored = localStorage.getItem('user');
 const user = userStored ? JSON.parse(userStored) : null;
-const currentRole = user?.role || 'ADMIN'; // 'ADMIN', 'BODEGA', 'COMPRAS'
+const currentRole = user?.role || ''; // 'ADMIN', 'BODEGA', 'COMPRAS'
 
 const userRoleText = computed(() => {
     switch(currentRole) {
@@ -154,33 +104,15 @@ const productosItems = [
   { icon: 'mdi-ruler', title: 'Unidades de medida', value: 'Unidades de medida', path: '/unidades-medida', roles: ['ADMIN'] },
 ];
 
-const inventarioItems = [
-  { icon: 'mdi-dolly', title: 'Lotes', value: 'Lotes', path: '/lotes', roles: ['ADMIN', 'WAREHOUSE', 'PURCHASING'] },
-];
-
-const proveedoresItems = [
-  { icon: 'mdi-truck', title: 'Proveedores', value: 'Proveedores', path: '/proveedores', roles: ['ADMIN', 'PURCHASING'] },
-];
-
-const seguridadItems = [
-  { icon: 'mdi-account-group', title: 'Usuarios', value: 'Usuarios', path: '/usuarios', roles: ['ADMIN'] },
-];
-
 // Propiedades computadas que filtran los elementos según el rol actual del usuario
 const filteredProductos = computed(() => productosItems.filter(i => i.roles.includes(currentRole)));
-const filteredInventario = computed(() => inventarioItems.filter(i => i.roles.includes(currentRole)));
-const filteredProveedores = computed(() => proveedoresItems.filter(i => i.roles.includes(currentRole)));
-const filteredSeguridad = computed(() => seguridadItems.filter(i => i.roles.includes(currentRole)));
 
 const logouts = [
-  { icon: 'mdi-account', title: 'Perfil', value: 'Perfil' },
   { icon: 'mdi-logout', title: 'Cerrar sesión', value: 'Cerrar sesión' },
 ];
 
 const manejarAccion = (value) => {
-    if (value === 'Perfil') {
-        router.push('/perfil');
-    } else if (value === 'Cerrar sesión') {
+    if (value === 'Cerrar sesión') {
         logout();
     }
 };

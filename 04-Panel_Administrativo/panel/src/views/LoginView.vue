@@ -61,9 +61,6 @@ const login = async () => {
             password: usuario.value.password
         });
 
-        console.log("Respuesta completa del backend:", response);
-        console.log("Datos de la respuesta:", response.data);
-
         const userData = response.data.user;
 
         // Verifica si el usuario está inactivo (false)
@@ -92,7 +89,7 @@ const login = async () => {
         }
 
     } catch (error) {
-        console.error('Error al iniciar sesión:', error);
+        console.error('Error al iniciar sesión:', error.response?.status);
 
         if (error.response) {
             const status = error.response.status;

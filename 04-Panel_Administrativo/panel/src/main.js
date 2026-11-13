@@ -18,6 +18,23 @@ axios.interceptors.request.use(config => {
   return config
 })
 
+// S2-08: Si la API responde 401 (token vencido o inválido), se cierra la sesión
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    const status = error.response?.status
+    const rutaActual = router.currentRoute.value.name
+
+    if (status === 401 && rutaActual !== 'login') {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      router.push({ name: 'login' })
+    }
+
+    return Promise.reject(error)
+  }
+)
+
 loadFonts()
 
 createApp(App)
