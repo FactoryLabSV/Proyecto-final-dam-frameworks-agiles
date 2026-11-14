@@ -26,14 +26,21 @@ El comando `npm install` instala las dependencias del proyecto y `ionic serve` i
 
 ## Pantallas
 
-- Productos: búsqueda por nombre o código y listado de existencias (HU-13).
-- Detalle de producto: presentaciones, existencia y precio vigente (HU-14, pendiente).
-- Categorías: listado de categorías y productos por categoría (HU-15, pendiente).
-- Login (HU-17, versión futura).
-- Avisos de error y sin conexión (HU-19, pendiente).
-- Alertas (HU-16, versión futura).
+- Login: autenticación contra la API con JWT y validación del rol de la app (HU-17).
+- Productos: búsqueda por nombre o código, filtro por categoría y existencias por presentación (HU-13, HU-15).
+- Detalle de producto: presentaciones, existencia y precio vigente (HU-14).
+- Categorías: listado de categorías del inventario (HU-15).
+- Avisos de error de conexión y reintento de consultas (HU-19).
+- Cierre de sesión desde la pantalla de Productos.
 
 La navegación principal utiliza únicamente dos pestañas: Productos y Categorías.
+
+## Inicio de sesión
+
+- La app envía el encabezado `X-Client-Interface: app` al endpoint `POST /api/auth/login`.
+- Solo los roles `ADMIN`, `WAREHOUSE` y `SELLER` pueden ingresar a la aplicación móvil.
+- El token se guarda en el dispositivo y se adjunta como `Bearer` en cada consulta.
+- Si el token expira o la API responde `401`, se limpia la sesión y se vuelve al login.
 
 ## Configuración
 
@@ -44,6 +51,6 @@ La navegación principal utiliza únicamente dos pestañas: Productos y Categor�
 ## Estado actual
 
 - S2-13: proyecto base Ionic + Angular y servicio HTTP aprobado.
-- S2-14: búsqueda de productos implementada con datos simulados.
-- La conexión con la API real se realizará cuando esté disponible el endpoint móvil correspondiente.
+- S2-14: búsqueda de productos conectada a la API.
+- S3: login con JWT, protección de rutas e integración de la app con los endpoints móviles.
 ```

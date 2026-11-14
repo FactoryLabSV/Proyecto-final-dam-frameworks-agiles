@@ -11,66 +11,77 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-
   <h2>Consulta de productos</h2>
 
   <p>Buscá un producto por nombre o código.</p>
 
-  <ion-searchbar
-    placeholder="Nombre o código"
-    (ionInput)="buscar($event)"
-    [debounce]="300">
+  <ion-searchbar placeholder="Nombre o código" maxlength="100" (ionInput)="buscar($event)" [debounce]="300">
   </ion-searchbar>
+
+  <ion-item>
+    <ion-select
+      label="Filtrar por categoría"
+      labelPlacement="stacked"
+      placeholder="Todas las categorías"
+      [value]="categoriaSeleccionada"
+      (ionChange)="filtrarCategoria($event)"
+    >
+      <ion-select-option [value]="null"> Todas las categorías </ion-select-option>
+
+      @for (categoria of categorias; track categoria.id) {
+      <ion-select-option [value]="categoria.id"> {{ categoria.name }} </ion-select-option>
+      }
+    </ion-select>
+  </ion-item>
 
   @for (producto of resultados; track producto.code) {
 
-    <ion-card
-      button="true"
-      (click)="verDetalle(producto)">
+  <ion-card button="true" (click)="verDetalle(producto)">
+    <ion-card-header>
+      <ion-card-title>{{ producto.name }}</ion-card-title>
+    </ion-card-header>
 
-      <ion-card-header>
-        <ion-card-title>{{ producto.name }}</ion-card-title>
-      </ion-card-header>
+    <ion-card-content>
+      <p><strong>Código:</strong> {{ producto.code }}</p>
 
-      <ion-card-content>
+      <p><strong>Categoría:</strong> {{ producto.categoryName }}</p>
 
-        <p><strong>Código:</strong> {{ producto.code }}</p>
+      <h3>Existencias por presentación</h3>
 
-        <p><strong>Categoría:</strong> {{ producto.categoryName }}</p>
+      @for (presentacion of producto.stock; track presentacion.presentationName) {
 
-        <h3>Existencias por presentación</h3>
-
-        @for (presentacion of producto.stock; track presentacion.presentationName) {
-
-          <p>
-            <strong>{{ presentacion.presentationName }}:</strong>
-            {{ presentacion.stock }} disponibles
-
-            @if (presentacion.stockStatus === 'OK') {
-              <ion-badge color="success">OK</ion-badge>
-            }
-
-            @if (presentacion.stockStatus === 'LOW') {
-              <ion-badge color="warning">Bajo</ion-badge>
-            }
-
-            @if (presentacion.stockStatus === 'OUT') {
-              <ion-badge color="danger">Agotado</ion-badge>
-            }
-          </p>
-
+      <p>
+        <strong>{{ presentacion.presentationName }}:</strong>
+        {{ presentacion.stock }} disponibles @if (presentacion.stockStatus === 'OK') {
+        <ion-badge color="success">OK</ion-badge>
+        } @if (presentacion.stockStatus === 'LOW') {
+        <ion-badge color="warning">Bajo</ion-badge>
+        } @if (presentacion.stockStatus === 'OUT') {
+        <ion-badge color="danger">Agotado</ion-badge>
         }
+      </p>
 
-      </ion-card-content>
-    </ion-card>
+      }
+    </ion-card-content>
+  </ion-card>
 
-  } @empty {
-
-    <div class="ion-text-center ion-padding">
-      <h3>No se encontraron productos</h3>
-      <p>Verificá el nombre o código ingresado.</p>
-    </div>
-
+  } @empty { @if (!cargando && !errorConexion) {
+  <div class="ion-text-center ion-padding">
+    <h3>No se encontraron productos</h3>
+    <p>Verificá el nombre o código ingresado.</p>
+  </div>
+  } } @if (cargando) {
+  <div class="ion-text-center ion-padding">
+    <p>Cargando productos...</p>
+  </div>
   }
 
+  <ion-alert
+    [isOpen]="mostrarAlerta"
+    header="Error de conexión"
+    message="No se pudieron cargar los productos. Verificá la conexión con la API e intentá nuevamente."
+    [buttons]="botonesAlerta"
+    (didDismiss)="mostrarAlerta = false"
+  >
+  </ion-alert>
 </ion-content>

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import type { OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
 import {
   IonContent,
   IonHeader,
@@ -12,13 +12,11 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
-  IonBadge
+  IonBadge,
 } from '@ionic/angular';
 
-import {
-  ProductoDetalle,
-  DETALLES_SIMULADOS
-} from '../models/producto';
+import type { ProductoDetalle } from '../models/producto';
+import { Api } from '../services/api';
 
 @Component({
   selector: 'app-detalle-producto',
@@ -35,20 +33,33 @@ import {
     IonCardHeader,
     IonCardTitle,
     IonCardContent,
-    IonBadge
+    IonBadge,
   ],
 })
 export class DetalleProductoPage implements OnInit {
+  private readonly route = inject(ActivatedRoute);
+  private readonly api = inject(Api);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   producto: ProductoDetalle | undefined;
 
-  constructor(private route: ActivatedRoute) {}
-
-  ngOnInit() {
+  ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
-    this.producto = DETALLES_SIMULADOS.find(
-      producto => producto.id === id
-    );
+    this.cargarDetalle(id);
+  }
+
+  cargarDetalle(id: number): void {
+    this.api.get<ProductoDetalle>('app/products/' + id).subscribe({
+      next: (producto) => {
+        this.producto = producto;
+        this.cdr.markForCheck();
+      },
+      error: (error) => {
+        console.error('Error al cargar el detalle:', error.message);
+        this.producto = undefined;
+        this.cdr.markForCheck();
+      },
+    });
   }
 }

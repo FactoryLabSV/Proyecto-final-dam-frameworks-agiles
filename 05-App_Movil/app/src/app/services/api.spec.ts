@@ -1,12 +1,10 @@
-import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import {
-  provideHttpClientTesting,
-  HttpTestingController
-} from '@angular/common/http/testing';
+import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+
+import { environment } from '../../environments/environment';
 
 import { Api } from './api';
-import { environment } from '../../environments/environment';
 
 describe('Api', () => {
   let service: Api;
@@ -14,11 +12,7 @@ describe('Api', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        Api,
-        provideHttpClient(),
-        provideHttpClientTesting()
-      ]
+      providers: [Api, provideHttpClient(), provideHttpClientTesting()],
     });
 
     service = TestBed.inject(Api);
@@ -36,13 +30,11 @@ describe('Api', () => {
   it('debe realizar una solicitud GET', () => {
     const categorias = [{ id: 1, name: 'Herramientas' }];
 
-    service.get('categories').subscribe(resultado => {
+    service.get('categories').subscribe((resultado) => {
       expect(resultado).toEqual(categorias);
     });
 
-    const solicitud = httpMock.expectOne(
-      environment.apiUrl + '/categories'
-    );
+    const solicitud = httpMock.expectOne(environment.apiUrl + '/categories');
 
     expect(solicitud.request.method).toBe('GET');
     solicitud.flush(categorias);
@@ -54,19 +46,15 @@ describe('Api', () => {
         throw new Error('Se esperaba un error');
       },
       error: (error) => {
-        expect(error.message).toBe(
-          'No se pudo conectar con el servidor.'
-        );
-      }
+        expect(error.message).toBe('No se pudo conectar con el servidor.');
+      },
     });
 
-    const solicitud = httpMock.expectOne(
-      environment.apiUrl + '/categories'
-    );
+    const solicitud = httpMock.expectOne(environment.apiUrl + '/categories');
 
     solicitud.flush(null, {
       status: 0,
-      statusText: 'Unknown Error'
+      statusText: 'Unknown Error',
     });
   });
 });

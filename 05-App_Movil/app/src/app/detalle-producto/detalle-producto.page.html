@@ -8,73 +8,59 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-
   @if (producto) {
 
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>{{ producto.name }}</ion-card-title>
-      </ion-card-header>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ producto.name }}</ion-card-title>
+    </ion-card-header>
 
-      <ion-card-content>
-        <p><strong>Código:</strong> {{ producto.code }}</p>
-        <p><strong>Categoría:</strong> {{ producto.categoryName }}</p>
-        <p><strong>Descripción:</strong> {{ producto.description }}</p>
-      </ion-card-content>
-    </ion-card>
+    <ion-card-content>
+      <p><strong>Código:</strong> {{ producto.code }}</p>
+      <p><strong>Categoría:</strong> {{ producto.categoryName }}</p>
+      <p><strong>Descripción:</strong> {{ producto.description }}</p>
+    </ion-card-content>
+  </ion-card>
 
-    <h3>Presentaciones y existencias</h3>
+  <h3>Presentaciones y existencias</h3>
 
-    @for (presentacion of producto.presentations; track presentacion.code) {
+  @for (presentacion of producto.presentations; track presentacion.code) {
 
-      <ion-card>
-        <ion-card-content>
+  <ion-card>
+    <ion-card-content>
+      <h2>{{ presentacion.name }}</h2>
 
-          <h2>{{ presentacion.name }}</h2>
+      <p>
+        <strong>Existencia:</strong>
+        {{ presentacion.stock }}
+      </p>
 
-          <p>
-            <strong>Existencia:</strong>
-            {{ presentacion.stock }}
-          </p>
+      <p>
+        <strong>Estado:</strong>
 
-          <p>
-            <strong>Estado:</strong>
+        @if (presentacion.stockStatus === 'OK') {
+        <ion-badge color="success">OK</ion-badge>
+        } @if (presentacion.stockStatus === 'LOW') {
+        <ion-badge color="warning">Bajo</ion-badge>
+        } @if (presentacion.stockStatus === 'OUT') {
+        <ion-badge color="danger">Agotado</ion-badge>
+        }
+      </p>
 
-            @if (presentacion.stockStatus === 'OK') {
-              <ion-badge color="success">OK</ion-badge>
-            }
+      <p>
+        <strong>Precio vigente:</strong>
 
-            @if (presentacion.stockStatus === 'LOW') {
-              <ion-badge color="warning">Bajo</ion-badge>
-            }
+        @if (presentacion.price !== null) { ${{ presentacion.price.toFixed(2) }} } @else { Sin precio vigente }
+      </p>
+    </ion-card-content>
+  </ion-card>
 
-            @if (presentacion.stockStatus === 'OUT') {
-              <ion-badge color="danger">Agotado</ion-badge>
-            }
-          </p>
+  } } @else {
 
-          <p>
-            <strong>Precio vigente:</strong>
-
-            @if (presentacion.price !== null) {
-              ${{ presentacion.price.toFixed(2) }}
-            } @else {
-              Sin precio vigente
-            }
-          </p>
-
-        </ion-card-content>
-      </ion-card>
-
-    }
-
-  } @else {
-
-    <div class="ion-text-center ion-padding">
-      <h3>Producto no encontrado</h3>
-      <p>No se encontró información del producto solicitado.</p>
-    </div>
+  <div class="ion-text-center ion-padding">
+    <h3>Producto no encontrado</h3>
+    <p>No se encontró información del producto solicitado.</p>
+  </div>
 
   }
-
 </ion-content>
