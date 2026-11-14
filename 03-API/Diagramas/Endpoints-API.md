@@ -139,11 +139,15 @@ Se repite en categorías, tipos de producto, marcas, modelos, unidades, presenta
 
 Reglas:
 - Credenciales incorrectas **o** usuario inactivo → 401 con el mismo mensaje genérico `"Credenciales inválidas"` (no revela si falló usuario o contraseña).
+- El campo `username` acepta el nombre de usuario o el correo registrado (la app muestra "Usuario o correo").
 - La app solo acepta roles `SELLER`, `WAREHOUSE` y `ADMIN`; el panel acepta `ADMIN`, `WAREHOUSE` y `PURCHASING`. Si el rol no corresponde a la interfaz → 403.
 - **Cierre de sesión:** lo hace el cliente (la app y el panel borran el token). La API **no guarda sesiones** ni lista de tokens revocados; no existe `POST /api/auth/logout`.
 - El token vence a la hora. Con un token vencido, la API responde 401 y el cliente redirige al login.
 - Sin token válido, la API rechaza toda operación protegida (401).
 - Un usuario desactivado conserva su token hasta que venza (máximo 1 hora); no puede iniciar sesión de nuevo.
+- **Interfaz del cliente:** el login es compartido, pero cada interfaz acepta roles distintos. El cliente envía el encabezado `X-Client-Interface: app` o `X-Client-Interface: panel`; si el rol no corresponde se responde 403. Si el encabezado se omite no se aplica la restricción por interfaz (compatibilidad con clientes de prueba). Valores distintos de `app` o `panel` responden 400.
+  - `app` acepta `ADMIN`, `WAREHOUSE` y `SELLER`.
+  - `panel` acepta `ADMIN`, `WAREHOUSE` y `PURCHASING`.
 
 **UserCreateRequest**
 

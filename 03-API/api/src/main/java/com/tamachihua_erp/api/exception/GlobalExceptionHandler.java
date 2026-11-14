@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import java.sql.SQLException;
 import java.time.Instant;
@@ -241,7 +242,20 @@ public class GlobalExceptionHandler {
         return null;
     }
 
-    // 10. Error de autenticación: HTTP 401
+    // 10. Usuario autenticado sin permiso sobre el recurso o la interfaz: HTTP 403
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiErrorResponseDto> handleAccessDenied(
+            AccessDeniedException ex,
+            HttpServletRequest request
+    ) {
+        return buildResponse(
+                HttpStatus.FORBIDDEN,
+                ex.getMessage(),
+                request
+        );
+    }
+
+    // 11. Error de autenticación: HTTP 401
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ApiErrorResponseDto> handleAuthenticationException(
             AuthenticationException ex,

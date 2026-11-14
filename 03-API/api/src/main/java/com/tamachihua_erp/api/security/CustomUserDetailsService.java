@@ -20,7 +20,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
 
+        // El login de la app permite escribir el usuario o el correo.
         var user = userRepository.findByUsername(username)
+                .or(() -> userRepository.findByEmailIgnoreCase(username))
                 .orElseThrow(() ->
                         new UsernameNotFoundException("Usuario no encontrado")
                 );

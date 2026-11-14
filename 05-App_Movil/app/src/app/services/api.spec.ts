@@ -1,12 +1,10 @@
-import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import {
-  provideHttpClientTesting,
-  HttpTestingController
-} from '@angular/common/http/testing';
+import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
 
-import { Api } from './api';
 import { environment } from '../../environments/environment';
+
+import { Api, type ApiError } from './api';
 
 describe('Api', () => {
   let service: Api;
@@ -14,11 +12,7 @@ describe('Api', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        Api,
-        provideHttpClient(),
-        provideHttpClientTesting()
-      ]
+      providers: [Api, provideHttpClient(), provideHttpClientTesting()],
     });
 
     service = TestBed.inject(Api);
@@ -36,13 +30,11 @@ describe('Api', () => {
   it('debe realizar una solicitud GET', () => {
     const categorias = [{ id: 1, name: 'Herramientas' }];
 
-    service.get('categories').subscribe(resultado => {
+    service.get('categories').subscribe((resultado) => {
       expect(resultado).toEqual(categorias);
     });
 
-    const solicitud = httpMock.expectOne(
-      environment.apiUrl + '/categories'
-    );
+    const solicitud = httpMock.expectOne(environment.apiUrl + '/categories');
 
     expect(solicitud.request.method).toBe('GET');
     solicitud.flush(categorias);
@@ -53,20 +45,36 @@ describe('Api', () => {
       next: () => {
         throw new Error('Se esperaba un error');
       },
-      error: (error) => {
-        expect(error.message).toBe(
-          'No se pudo conectar con el servidor.'
-        );
-      }
+      error: (error: ApiError) => {
+        expect(error.message).toBe('No se pudo conectar con el servidor.');
+        expect(error.status).toBe(0);
+      },
     });
 
-    const solicitud = httpMock.expectOne(
-      environment.apiUrl + '/categories'
-    );
+    const solicitud = httpMock.expectOne(environment.apiUrl + '/categories');
 
     solicitud.flush(null, {
       status: 0,
-      statusText: 'Unknown Error'
+      statusText: 'Unknown Error',
+    });
+  });
+
+  it('debe conservar el código HTTP en el error', () => {
+    service.get('products').subscribe({
+      next: () => {
+        throw new Error('Se esperaba un error');
+      },
+      error: (error: ApiError) => {
+        expect(error.status).toBe(404);
+        expect(error.message).toBe('No se encontró el recurso solicitado.');
+      },
+    });
+
+    const solicitud = httpMock.expectOne(environment.apiUrl + '/products');
+
+    solicitud.flush(null, {
+      status: 404,
+      statusText: 'Not Found',
     });
   });
 });
