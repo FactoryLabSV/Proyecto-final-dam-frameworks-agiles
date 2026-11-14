@@ -308,6 +308,109 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- Asignar o editar el precio de una presentacion -->
+    <v-dialog v-model="dialogoPrecio" max-width="450" persistent>
+      <v-card>
+        <v-card-title class="pa-4">
+          {{ editando ? 'Actualizar Precio' : 'Nuevo Precio' }}
+        </v-card-title>
+
+        <v-card-text>
+          <!-- Alerta de errores -->
+          <v-alert
+            v-if="errorGeneral"
+            type="error"
+            variant="tonal"
+            class="mb-4"
+            closable
+            @click:close="errorGeneral = ''"
+          >
+            {{ errorGeneral }}
+          </v-alert>
+
+          <v-form ref="formularioRef" @submit.prevent="GuardarPrecio">
+            
+            <!-- Único campo visible para el usuario -->
+            <v-text-field
+              v-model="formularioPrecio.price"
+              label="Precio *"
+              type="number"
+              min="0.01"
+              step="0.01"
+              :rules="reglasPrice()"
+              :error-messages="erroresCampo.price"
+              variant="outlined"
+              hint="La fecha y el usuario se registrarán automáticamente."
+              persistent-hint
+              class="mb-2"
+              @update:model-value="limpiarErrorCampo('price')"
+            />
+
+          </v-form>
+        </v-card-text>
+
+        <v-card-actions class="pa-4">
+          <v-spacer />
+          <v-btn variant="text" :disabled="guardando" @click="dialogoPrecio = false">
+            Cancelar
+          </v-btn>
+          <v-btn color="primary" :loading="guardando" prepend-icon="mdi-content-save" @click="GuardarPrecio">
+            Guardar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="dialogoHistorial" max-width="700" persistent>
+    <v-card>
+      <v-card-title class="pa-4 d-flex justify-space-between align-center">
+        <span>Historial de Precios: {{ presentationNombreActual }}</span>
+        <v-btn icon="mdi-close" variant="text" @click="dialogoHistorial = false" />
+      </v-card-title>
+
+      <v-card-text>
+        <v-alert v-if="errorHistorial" type="error" variant="tonal" class="mb-4">
+          {{ errorHistorial }}
+        </v-alert>
+
+        <!-- Tabla para mostrar el historial -->
+        <v-data-table
+          :headers="headersHistorial"
+          :items="listaHistorial"
+          :loading="cargandoHistorial"
+          no-data-text="No hay registros en el historial de precios."
+          class="elevation-1"
+        >
+          <!-- Opcional: Formatear la columna de precio con símbolo de moneda -->
+          <template v-slot:item.price="{ item }">
+            ${{ Number(item.price).toFixed(2) }}
+          </template>
+
+          <!-- Columna Modificado por -->
+          <template v-slot:item.user="{ item }">
+            {{ item.changedBy?.fullName || 'Sistema' }}
+          </template>
+
+          <!-- Opcional: Formatear las fechas si vienen muy largas -->
+          <template v-slot:item.start_date="{ item }">
+            {{ (item.start_date || item.startDate) ? (item.start_date || item.startDate).split('T')[0] : 'No registrada' }}
+          </template>
+          <template v-slot:item.end_date="{ item }">
+            {{ (item.end_date || item.endDate) ? (item.end_date || item.endDate).split('T')[0] : 'Vigente (Actual)' }}
+          </template>
+        </v-data-table>
+      </v-card-text>
+
+      <v-card-actions class="pa-4">
+        <v-spacer />
+        <v-btn color="primary" variant="text" @click="dialogoHistorial = false">
+          Cerrar
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
   </v-card>
 </template>
 
@@ -318,12 +421,12 @@ import EstadoStockChip from './EstadoStockChip.vue'
 import {
   obtenerErroresCampo,
   obtenerMensajeError
-} from '../utils/apiError'
+} from '../utils/apiError.js'
 import {
   describirPresentacion,
   formatearMoneda,
   formatearNumero
-} from '../utils/formatters'
+} from '../utils/formatters.js'
 
 export default {
   name: 'ProductoPresentaciones',
@@ -358,6 +461,8 @@ export default {
     return {
       apiPresentaciones: '/api/presentations/options',
 
+      //Columnas de la tabla datatable de Presentaciones
+
       columnas: [
         { title: 'Presentación', key: 'presentation', sortable: false },
         { title: 'Código', key: 'code', sortable: false },
@@ -369,8 +474,24 @@ export default {
         { title: 'Acciones', key: 'acciones', align: 'end', sortable: false }
       ],
 
+      //Listado Historial
+
+      dialogoHistorial: false,
+      cargandoHistorial: false,
+      errorHistorial: '',
+      presentationNombreActual: '',
+      listaHistorial: [],
+      headersHistorial: [
+        { title: 'ID', key: 'id' },
+        { title: 'Precio', key: 'price' },
+        { title: 'Modificado por', key: 'user' },
+        { title: 'Fecha Inicio', key: 'start_date' },
+        { title: 'Fecha Fin', key: 'end_date' },
+      ],
+
       opcionesPresentaciones: [],
 
+      dialogoPrecio: false,
       dialogo: false,
       dialogoEstado: false,
       editando: false,
@@ -378,6 +499,14 @@ export default {
 
       registroEditando: null,
       registroEstado: null,
+
+      formularioPrecio: {
+        productPresentationId: null,
+        userId: '',
+        price: '',
+        startDate: '',
+        endDate: ''
+      },
 
       formulario: {
         presentationId: null,
@@ -483,6 +612,24 @@ export default {
 
           return Number(texto) > 0 ||
             'El stock mínimo debe ser mayor que 0.'
+        }
+      ]
+    },
+
+    reglasPrice() {
+      return [
+        valor =>
+          String(valor ?? '').trim() !== '' ||
+          'El precio es obligatorio.',
+        valor => {
+          const texto = String(valor ?? '').trim()
+
+          if (!/^-?\d{1,10}(\.\d{1,2})?$/.test(texto)) {
+            return 'Usa hasta 10 enteros y 2 decimales.'
+          }
+
+          return Number(texto) > 0 ||
+            'El precio debe ser mayor que 0.'
         }
       ]
     },
@@ -672,24 +819,122 @@ export default {
 
     // S2-12b conectará el formulario de cambio de precio.
     avisarPrecio(item) {
-      const nombre = item.presentation?.name || item.code
 
-      this.$emit(
-        'notificar',
-        `El cambio de precio de "${nombre}" se integrará en S2-12b.`,
-        'info'
-      )
+      const registro = item.raw ?? item
+
+      // Obtener fecha actual en formato YYYY-MM-DD de forma automática
+      const fechaActual = new Date().toISOString().split('T')[0]
+
+      // Obtener el ID del usuario logueado automáticamente (según tu sistema de auth)
+      const idUsuarioLogueado = this.$auth?.user?.id ?? null
+
+
+      this.editando = true
+      this.registroEditando = registro
+    
+      this.formularioPrecio = {
+        productPresentationId: registro.product_presentation?.id ?? null,
+        userId: registro.user_id || idUsuarioLogueado,
+        price: registro.price ?? '',
+        start_date: registro.start_date || fechaActual,
+        end_date: registro.end_date || null
+      },
+
+      this.erroresCampo = {}
+      this.errorGeneral = ''
+      this.dialogoPrecio = true
+
+      this.$nextTick(() => {
+        this.$refs.formularioRef?.resetValidation()
+      })
+    },
+
+    async GuardarPrecio()
+    {
+      if (this.guardando) {
+        return
+      }
+
+      const resultado = await this.$refs.formularioRef.validate()
+
+      if (!resultado.valid) {
+        return
+      }
+
+      this.erroresCampo = {}
+      this.errorGeneral = ''
+      this.guardando = true
+
+      const cuerpo = {
+        price: Number(this.formularioPrecio.price || ''),
+        user_id: this.formularioPrecio.user_id,
+        start_date: this.formularioPrecio.start_date,
+        end_date: this.formularioPrecio.end_date
+      }
+
+      try {
+        await axios.post(
+          `/api/products/${this.productId}/presentations/${this.registroEditando.id}/prices`,
+          cuerpo
+        )
+
+        this.dialogoPrecio = false
+        this.registroEditando = null
+
+        this.$emit('recargar')
+        this.$emit(
+          'notificar',
+          'Precio actualizado correctamente.',
+          'success'
+        )
+
+      } catch (error) {
+        console.error('Error al guardar el precio:', error)
+
+        const estado = error.response?.status
+        const mensaje = obtenerMensajeError(
+          error,
+          'No fue posible guardar el precio.'
+        )
+        const campos = obtenerErroresCampo(error)
+
+        this.erroresCampo = campos
+        this.errorGeneral = mensaje
+
+        if (!Object.keys(campos).length && !this.errorGeneral) {
+          this.errorGeneral = mensaje
+        }
+
+      } finally {
+        this.guardando = false
+      }
     },
 
     // S2-12b conectará el historial de precios.
-    avisarHistorial(item) {
-      const nombre = item.presentation?.name || item.code
+    async avisarHistorial(item) {
+      const registro = item.raw ?? item
+      const presentationId = registro.product_presentation?.id ?? registro.id
+      
+      this.presentationNombreActual = registro.presentation?.name || registro.code || 'Presentación'
+      this.dialogoHistorial = true
+      this.cargandoHistorial = true
+      this.errorHistorial = ''
+      this.listaHistorial = []
 
-      this.$emit(
-        'notificar',
-        `El historial de precios de "${nombre}" se integrará en S2-12b.`,
-        'info'
-      )
+      try {
+        // Petición GET a tu backend usando la ruta basada en tu estructura de base de datos
+        const respuesta = await axios.get(
+          `/api/products/${this.productId}/presentations/${presentationId}/prices`
+        )
+        
+        // Asignamos los datos obtenidos de la BD a la lista de la tabla
+        this.listaHistorial = respuesta.data
+      } catch (error) {
+        console.error('Error al cargar el historial de precios:', error)
+        this.errorHistorial = 'No fue posible cargar el historial de precios.'
+      } finally {
+        this.cargandoHistorial = false
+      }
     }
   }
 }
