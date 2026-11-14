@@ -16,6 +16,27 @@
     [debounce]="300">
   </ion-searchbar>
 
+<ion-item>
+  <ion-select
+    label="Filtrar por categoría"
+    labelPlacement="stacked"
+    placeholder="Todas las categorías"
+    [value]="categoriaSeleccionada"
+    (ionChange)="filtrarCategoria($event)">
+
+    <ion-select-option [value]="null">
+      Todas las categorías
+    </ion-select-option>
+
+    @for (categoria of categorias; track categoria.id) {
+      <ion-select-option [value]="categoria.id">
+        {{ categoria.name }}
+      </ion-select-option>
+    }
+
+  </ion-select>
+</ion-item>
+
   @for (producto of resultados; track producto.code) {
 
     <ion-card
@@ -60,11 +81,27 @@
 
   } @empty {
 
-    <div class="ion-text-center ion-padding">
-      <h3>No se encontraron productos</h3>
-      <p>Verificá el nombre o código ingresado.</p>
-    </div>
+    @if (!cargando && !errorConexion) {
+      <div class="ion-text-center ion-padding">
+        <h3>No se encontraron productos</h3>
+        <p>Verificá el nombre o código ingresado.</p>
+      </div>
+    }
 
   }
+
+  @if (cargando) {
+    <div class="ion-text-center ion-padding">
+      <p>Cargando productos...</p>
+    </div>
+  }
+
+  <ion-alert
+    [isOpen]="mostrarAlerta"
+    header="Error de conexión"
+    message="No se pudieron cargar los productos. Verificá la conexión con la API e intentá nuevamente."
+    [buttons]="botonesAlerta"
+    (didDismiss)="mostrarAlerta = false">
+  </ion-alert>
 
 </ion-content>

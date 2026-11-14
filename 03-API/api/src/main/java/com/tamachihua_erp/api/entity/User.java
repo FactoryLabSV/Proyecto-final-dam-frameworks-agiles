@@ -44,4 +44,28 @@ public class User {
     @Column(name = "updated_at", nullable = false,
             insertable = false, updatable = false)
     private LocalDateTime updatedAt;
+
+    // La base mantiene estos valores con su trigger; se completan también en
+    // memoria para que la respuesta de creación los devuelva.
+    @PrePersist
+    protected void onCreate() {
+        LocalDateTime now = LocalDateTime.now();
+
+        if (createdAt == null) {
+            createdAt = now;
+        }
+
+        if (updatedAt == null) {
+            updatedAt = now;
+        }
+
+        if (isActive == null) {
+            isActive = true;
+        }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

@@ -187,6 +187,50 @@ public class SecurityConfig {
                                 "/api/products/*/presentations/*/prices"
                         ).hasRole("ADMIN")
 
+                        // Último costo pagado: ADMIN y PURCHASING (contrato 7)
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/products/*/last-cost"
+                        ).hasAnyRole("ADMIN", "PURCHASING")
+
+                        // Usuarios: únicamente ADMIN (HU-02)
+                        .requestMatchers(
+                                "/api/users",
+                                "/api/users/**"
+                        ).hasRole("ADMIN")
+
+                        // Proveedores: ADMIN y PURCHASING (HU-09)
+                        .requestMatchers(
+                                "/api/suppliers",
+                                "/api/suppliers/**"
+                        ).hasAnyRole("ADMIN", "PURCHASING")
+
+                        // Lotes: consulta para ADMIN, WAREHOUSE y PURCHASING
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/lots",
+                                "/api/lots/**"
+                        ).hasAnyRole("ADMIN", "WAREHOUSE", "PURCHASING")
+
+                        // Lotes: registrar y corregir cantidad para ADMIN y WAREHOUSE
+                        .requestMatchers(
+                                "/api/lots",
+                                "/api/lots/**"
+                        ).hasAnyRole("ADMIN", "WAREHOUSE")
+
+                        // Dashboard: resumen y lotes por vencer (ADMIN, WAREHOUSE)
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/dashboard/summary",
+                                "/api/dashboard/expiring-lots"
+                        ).hasAnyRole("ADMIN", "WAREHOUSE")
+
+                        // Dashboard: bajo stock también para PURCHASING
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/dashboard/low-stock"
+                        ).hasAnyRole("ADMIN", "WAREHOUSE", "PURCHASING")
+
                         // Productos: lectura para ADMIN, WAREHOUSE y PURCHASING (HU-06, HU-07)
                         .requestMatchers(
                                 HttpMethod.GET,
@@ -244,6 +288,17 @@ public class SecurityConfig {
                 )
 
                 .oauth2ResourceServer(oauth2 -> oauth2
+                        // Un token alterado o expirado lo rechaza este manejador,
+                        // Corrección, ya se manda los datos
+                        .authenticationEntryPoint((request, response, exception) ->
+                                securityErrorWriter.write(
+                                        request,
+                                        response,
+                                        401,
+                                        "UNAUTHORIZED",
+                                        "Autenticación requerida o token inválido"
+                                )
+                        )
                         .jwt(jwt -> jwt
                                 .jwtAuthenticationConverter(
                                         jwtAuthenticationConverter
