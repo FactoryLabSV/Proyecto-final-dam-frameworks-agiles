@@ -6094,7 +6094,14 @@
                 "header": [],
                 "url": "{{baseUrl}}/api/app/products?search=clavo",
                 "auth": {
-                  "type": "noauth"
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{tokenSeller}}",
+                      "type": "string"
+                    }
+                  ]
                 }
               },
               "event": [
@@ -6119,7 +6126,14 @@
                 "header": [],
                 "url": "{{baseUrl}}/api/app/products?search=CLAVO",
                 "auth": {
-                  "type": "noauth"
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{tokenSeller}}",
+                      "type": "string"
+                    }
+                  ]
                 }
               },
               "event": [
@@ -6142,7 +6156,14 @@
                 "header": [],
                 "url": "{{baseUrl}}/api/app/products?search=HER-001",
                 "auth": {
-                  "type": "noauth"
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{tokenSeller}}",
+                      "type": "string"
+                    }
+                  ]
                 }
               },
               "event": [
@@ -6165,7 +6186,14 @@
                 "header": [],
                 "url": "{{baseUrl}}/api/app/products?search=AGR-010-GL",
                 "auth": {
-                  "type": "noauth"
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{tokenSeller}}",
+                      "type": "string"
+                    }
+                  ]
                 }
               },
               "event": [
@@ -6188,7 +6216,14 @@
                 "header": [],
                 "url": "{{baseUrl}}/api/app/products?search=FER-001",
                 "auth": {
-                  "type": "noauth"
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{tokenSeller}}",
+                      "type": "string"
+                    }
+                  ]
                 }
               },
               "event": [
@@ -6216,7 +6251,14 @@
                 "header": [],
                 "url": "{{baseUrl}}/api/app/products?search=xyz123",
                 "auth": {
-                  "type": "noauth"
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{tokenSeller}}",
+                      "type": "string"
+                    }
+                  ]
                 }
               },
               "event": [
@@ -6239,7 +6281,14 @@
                 "header": [],
                 "url": "{{baseUrl}}/api/app/products?search=AGR-010-G",
                 "auth": {
-                  "type": "noauth"
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{tokenSeller}}",
+                      "type": "string"
+                    }
+                  ]
                 }
               },
               "event": [
@@ -6262,7 +6311,14 @@
                 "header": [],
                 "url": "{{baseUrl}}/api/app/products?search=%25%27",
                 "auth": {
-                  "type": "noauth"
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{tokenSeller}}",
+                      "type": "string"
+                    }
+                  ]
                 }
               },
               "event": [
@@ -6284,7 +6340,14 @@
                 "header": [],
                 "url": "{{baseUrl}}/api/app/products?size=100",
                 "auth": {
-                  "type": "noauth"
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{tokenSeller}}",
+                      "type": "string"
+                    }
+                  ]
                 }
               },
               "event": [
@@ -6307,7 +6370,14 @@
                 "header": [],
                 "url": "{{baseUrl}}/api/app/products?search=clavo",
                 "auth": {
-                  "type": "noauth"
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{tokenSeller}}",
+                      "type": "string"
+                    }
+                  ]
                 }
               },
               "event": [
@@ -6343,7 +6413,14 @@
                 "header": [],
                 "url": "{{baseUrl}}/api/app/products/{{idProdHER001}}",
                 "auth": {
-                  "type": "noauth"
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{tokenSeller}}",
+                      "type": "string"
+                    }
+                  ]
                 }
               },
               "event": [
@@ -6368,7 +6445,14 @@
                 "header": [],
                 "url": "{{baseUrl}}/api/app/products/{{idProdPIN001}}",
                 "auth": {
-                  "type": "noauth"
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{tokenSeller}}",
+                      "type": "string"
+                    }
+                  ]
                 }
               },
               "event": [
@@ -6434,7 +6518,14 @@
                 "header": [],
                 "url": "{{baseUrl}}/api/app/products/{{idProdNuevo}}",
                 "auth": {
-                  "type": "noauth"
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{tokenSeller}}",
+                      "type": "string"
+                    }
+                  ]
                 }
               },
               "event": [
@@ -6462,7 +6553,14 @@
                 "header": [],
                 "url": "{{baseUrl}}/api/app/products/{{idProdHER001}}",
                 "auth": {
-                  "type": "noauth"
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{tokenSeller}}",
+                      "type": "string"
+                    }
+                  ]
                 }
               },
               "event": [
@@ -6488,7 +6586,14 @@
                 "header": [],
                 "url": "{{baseUrl}}/api/app/products/99999",
                 "auth": {
-                  "type": "noauth"
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{tokenSeller}}",
+                      "type": "string"
+                    }
+                  ]
                 }
               },
               "event": [
@@ -6511,7 +6616,14 @@
                 "header": [],
                 "url": "{{baseUrl}}/api/app/products/abc",
                 "auth": {
-                  "type": "noauth"
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{tokenSeller}}",
+                      "type": "string"
+                    }
+                  ]
                 }
               },
               "event": [
@@ -6577,7 +6689,14 @@
                 "header": [],
                 "url": "{{baseUrl}}/api/app/products/{{idProdNuevo}}",
                 "auth": {
-                  "type": "noauth"
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{tokenSeller}}",
+                      "type": "string"
+                    }
+                  ]
                 }
               },
               "event": [
