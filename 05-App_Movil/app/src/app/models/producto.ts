@@ -41,17 +41,15 @@ export const PRODUCTOS_SIMULADOS: Producto[] = [
     categoryName: 'Fertilizantes',
     stock: [
       { presentationName: 'Bolsa 1 kg', stock: 15, stockStatus: 'OK' },
-      { presentationName: 'Saco 25 kg', stock: 4, stockStatus: 'LOW' }
-    ]
+      { presentationName: 'Saco 25 kg', stock: 4, stockStatus: 'LOW' },
+    ],
   },
   {
     id: 2,
     code: 'PROD002',
     name: 'Cemento gris',
     categoryName: 'Construcción',
-    stock: [
-      { presentationName: 'Bolsa 42.5 kg', stock: 30, stockStatus: 'OK' }
-    ]
+    stock: [{ presentationName: 'Bolsa 42.5 kg', stock: 30, stockStatus: 'OK' }],
   },
   {
     id: 3,
@@ -60,9 +58,9 @@ export const PRODUCTOS_SIMULADOS: Producto[] = [
     categoryName: 'Ferretería',
     stock: [
       { presentationName: 'Libra', stock: 20, stockStatus: 'OK' },
-      { presentationName: 'Caja', stock: 0, stockStatus: 'OUT' }
-    ]
-  }
+      { presentationName: 'Caja', stock: 0, stockStatus: 'OUT' },
+    ],
+  },
 ];
 
 export const DETALLES_SIMULADOS: ProductoDetalle[] = [
@@ -80,20 +78,20 @@ export const DETALLES_SIMULADOS: ProductoDetalle[] = [
         name: 'Bolsa 1 kg',
         unit: 'Kilogramo',
         quantity: 1,
-        price: 3.50,
+        price: 3.5,
         stock: 15,
-        stockStatus: 'OK'
+        stockStatus: 'OK',
       },
       {
         code: 'AB002',
         name: 'Saco 25 kg',
         unit: 'Kilogramo',
         quantity: 25,
-        price: 28.00,
+        price: 28.0,
         stock: 4,
-        stockStatus: 'LOW'
-      }
-    ]
+        stockStatus: 'LOW',
+      },
+    ],
   },
   {
     id: 2,
@@ -109,11 +107,11 @@ export const DETALLES_SIMULADOS: ProductoDetalle[] = [
         name: 'Bolsa 42.5 kg',
         unit: 'Kilogramo',
         quantity: 42.5,
-        price: 9.50,
+        price: 9.5,
         stock: 30,
-        stockStatus: 'OK'
-      }
-    ]
+        stockStatus: 'OK',
+      },
+    ],
   },
   {
     id: 3,
@@ -131,7 +129,7 @@ export const DETALLES_SIMULADOS: ProductoDetalle[] = [
         quantity: 1,
         price: 1.75,
         stock: 20,
-        stockStatus: 'OK'
+        stockStatus: 'OK',
       },
       {
         code: 'CL002',
@@ -140,8 +138,8 @@ export const DETALLES_SIMULADOS: ProductoDetalle[] = [
         quantity: 1,
         price: null,
         stock: 0,
-        stockStatus: 'OUT'
-      }
-    ]
-  }
+        stockStatus: 'OUT',
+      },
+    ],
+  },
 ];

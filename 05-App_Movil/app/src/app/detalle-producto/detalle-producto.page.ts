@@ -1,6 +1,6 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import type { OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
 import {
   IonContent,
   IonHeader,
@@ -12,11 +12,11 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
-  IonBadge
+  IonBadge,
 } from '@ionic/angular';
 
+import type { ProductoDetalle } from '../models/producto';
 import { Api } from '../services/api';
-import { ProductoDetalle } from '../models/producto';
 
 @Component({
   selector: 'app-detalle-producto',
@@ -33,26 +33,23 @@ import { ProductoDetalle } from '../models/producto';
     IonCardHeader,
     IonCardTitle,
     IonCardContent,
-    IonBadge
-  ]
+    IonBadge,
+  ],
 })
 export class DetalleProductoPage implements OnInit {
+  private readonly route = inject(ActivatedRoute);
+  private readonly api = inject(Api);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   producto: ProductoDetalle | undefined;
 
-  constructor(
-    private route: ActivatedRoute,
-    private api: Api,
-    private cdr: ChangeDetectorRef
-  ) {}
-
-  ngOnInit() {
+  ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
     this.cargarDetalle(id);
   }
 
-  cargarDetalle(id: number) {
+  cargarDetalle(id: number): void {
     this.api.get<ProductoDetalle>('app/products/' + id).subscribe({
       next: (producto) => {
         this.producto = producto;
@@ -62,7 +59,7 @@ export class DetalleProductoPage implements OnInit {
         console.error('Error al cargar el detalle:', error.message);
         this.producto = undefined;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 }

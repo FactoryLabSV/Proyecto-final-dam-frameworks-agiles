@@ -1,7 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
 import { HttpParams } from '@angular/common/http';
-
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import type { OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   IonHeader,
   IonToolbar,
@@ -15,12 +15,18 @@ import {
   IonCardTitle,
   IonCardContent,
   IonBadge,
+  IonButtons,
+  IonButton,
+  IonIcon,
   IonItem,
-  IonAlert
+  IonAlert,
 } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { logOutOutline } from 'ionicons/icons';
 
-import { Api } from '../services/api';
-import { Producto } from '../models/producto';
+import type { Producto } from '../models/producto';
+import { Api, type ApiError } from '../services/api';
+import { Auth } from '../services/auth';
 
 interface Categoria {
   id: number;
@@ -44,11 +50,18 @@ interface Categoria {
     IonCardTitle,
     IonCardContent,
     IonBadge,
+    IonButtons,
+    IonButton,
+    IonIcon,
     IonItem,
-    IonAlert
-  ]
+    IonAlert,
+  ],
 })
 export class Tab1Page implements OnInit {
+  private readonly api = inject(Api);
+  private readonly auth = inject(Auth);
+  private readonly router = inject(Router);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   resultados: Producto[] = [];
   categorias: Categoria[] = [];
@@ -64,25 +77,23 @@ export class Tab1Page implements OnInit {
   botonesAlerta = [
     {
       text: 'Reintentar',
-      handler: () => {
+      handler: (): void => {
         this.mostrarAlerta = false;
         this.cargarProductos();
-      }
-    }
+      },
+    },
   ];
 
-  constructor(
-    private api: Api,
-    private router: Router,
-    private cdr: ChangeDetectorRef
-  ) {}
+  constructor() {
+    addIcons({ logOutOutline });
+  }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.cargarCategorias();
     this.cargarProductos();
   }
 
-  cargarCategorias() {
+  cargarCategorias(): void {
     this.api.get<Categoria[]>('app/categories').subscribe({
       next: (respuesta) => {
         this.categorias = respuesta;
@@ -91,11 +102,11 @@ export class Tab1Page implements OnInit {
       error: (error) => {
         console.error('Error al cargar categorías:', error.message);
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
-  cargarProductos() {
+  cargarProductos(): void {
     this.cargando = true;
     this.errorConexion = false;
 
@@ -117,9 +128,16 @@ export class Tab1Page implements OnInit {
           this.cdr.markForCheck();
         }
       },
-      error: (error) => {
+      error: (error: ApiError) => {
         if (busqueda === this.busquedaActual) {
           console.error('Error al cargar productos:', error);
+
+          // 401: la sesión venció; el interceptor ya envía al login, no es un problema de conexión
+          if (error.status === 401) {
+            this.cargando = false;
+            this.cdr.markForCheck();
+            return;
+          }
 
           this.resultados = [];
           this.cargando = false;
@@ -128,21 +146,33 @@ export class Tab1Page implements OnInit {
 
           this.cdr.markForCheck();
         }
-      }
+      },
     });
   }
 
-  buscar(event: CustomEvent) {
-    this.textoBusqueda = (event.detail.value || '').trim();
+  buscar(event: CustomEvent): void {
+    const valor = event.detail.value;
+    const texto = typeof valor === 'string' ? valor : '';
+
+    // La API recibe un único parámetro de búsqueda: nombre, código
+    // de producto o código exacto de presentación.
+    this.textoBusqueda = texto.trim().slice(0, 100);
     this.cargarProductos();
   }
 
-  filtrarCategoria(event: CustomEvent) {
-    this.categoriaSeleccionada = event.detail.value;
+  filtrarCategoria(event: CustomEvent): void {
+    const valor = event.detail.value;
+
+    this.categoriaSeleccionada = typeof valor === 'number' ? valor : null;
     this.cargarProductos();
   }
 
-  verDetalle(producto: Producto) {
+  verDetalle(producto: Producto): void {
     this.router.navigate(['/tabs/tab1/producto', producto.id]);
+  }
+
+  cerrarSesion(): void {
+    this.auth.logout();
+    void this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 }

@@ -24,9 +24,15 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(
-            @Valid @RequestBody LoginRequestDto request
+            @Valid @RequestBody LoginRequestDto request,
+            @RequestHeader(
+                    value = "X-Client-Interface",
+                    required = false
+            ) String clientInterface
     ) {
-        return ResponseEntity.ok(authService.login(request));
+        return ResponseEntity.ok(
+                authService.login(request, clientInterface)
+        );
     }
 
     @GetMapping("/me")
