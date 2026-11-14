@@ -15,8 +15,8 @@ import {
   IonCardTitle,
   IonCardContent,
   IonBadge,
-  IonItem
-
+  IonItem,
+  IonAlert
 } from '@ionic/angular';
 
 import { Api } from '../services/api';
@@ -44,7 +44,8 @@ interface Categoria {
     IonCardTitle,
     IonCardContent,
     IonBadge,
-    IonItem
+    IonItem,
+    IonAlert
   ]
 })
 export class Tab1Page implements OnInit {
@@ -55,6 +56,20 @@ export class Tab1Page implements OnInit {
   textoBusqueda = '';
   categoriaSeleccionada: number | null = null;
   busquedaActual = 0;
+
+  cargando = false;
+  errorConexion = false;
+  mostrarAlerta = false;
+
+  botonesAlerta = [
+    {
+      text: 'Reintentar',
+      handler: () => {
+        this.mostrarAlerta = false;
+        this.cargarProductos();
+      }
+    }
+  ];
 
   constructor(
     private api: Api,
@@ -81,6 +96,9 @@ export class Tab1Page implements OnInit {
   }
 
   cargarProductos() {
+    this.cargando = true;
+    this.errorConexion = false;
+
     const busqueda = ++this.busquedaActual;
 
     let params = new HttpParams().set('search', this.textoBusqueda);
@@ -93,13 +111,21 @@ export class Tab1Page implements OnInit {
       next: (respuesta) => {
         if (busqueda === this.busquedaActual) {
           this.resultados = respuesta.content;
+          this.cargando = false;
+          this.errorConexion = false;
+          this.mostrarAlerta = false;
           this.cdr.markForCheck();
         }
       },
       error: (error) => {
         if (busqueda === this.busquedaActual) {
-          console.error('Error al cargar productos:', error.message);
+          console.error('Error al cargar productos:', error);
+
           this.resultados = [];
+          this.cargando = false;
+          this.errorConexion = true;
+          this.mostrarAlerta = true;
+
           this.cdr.markForCheck();
         }
       }

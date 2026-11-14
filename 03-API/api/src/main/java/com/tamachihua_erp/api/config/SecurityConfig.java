@@ -288,6 +288,17 @@ public class SecurityConfig {
                 )
 
                 .oauth2ResourceServer(oauth2 -> oauth2
+                        // Un token alterado o expirado lo rechaza este manejador,
+                        // Corrección, ya se manda los datos
+                        .authenticationEntryPoint((request, response, exception) ->
+                                securityErrorWriter.write(
+                                        request,
+                                        response,
+                                        401,
+                                        "UNAUTHORIZED",
+                                        "Autenticación requerida o token inválido"
+                                )
+                        )
                         .jwt(jwt -> jwt
                                 .jwtAuthenticationConverter(
                                         jwtAuthenticationConverter

@@ -29,7 +29,7 @@ Marvin deja una entidad completa (de la entidad al controlador) como plantilla p
 ## Configuración
 
 - No subir usuario ni contraseña de la base de datos. Usar `application-local.properties` (ignorado por Git) y subir un `application-example.properties` con valores de ejemplo.
-- Ejecutar: `mvnw spring-boot:run` (Windows) o `./mvnw spring-boot:run`.
+- Ejecutar: `.\mvnw.cmd spring-boot:run` (Windows) o `./mvnw spring-boot:run`.
 
 ## Pruebas
 
@@ -154,6 +154,7 @@ El proyecto necesita las siguientes variables:
 | `DB_URL` | Dirección de conexión a PostgreSQL | `jdbc:postgresql://localhost:5432/tamachihua_erp` |
 | `DB_USERNAME` | Usuario de PostgreSQL | `postgres` |
 | `DB_PASSWORD` | Contraseña del usuario | Tu contraseña local |
+| `JWT_SECRET` | Clave Base64 para firmar los tokens (mínimo 32 bytes decodificados) | Se genera con el comando de la sección de JWT |
 
 Cada integrante debe utilizar las credenciales de su propia instalación de PostgreSQL.
 
@@ -166,6 +167,7 @@ Si utilizas Windows, puedes establecer las variables para la sesión actual de P
 $env:DB_URL="jdbc:postgresql://localhost:5432/tamachihua_erp"
 $env:DB_USERNAME="tu_usuario_postgres"
 $env:DB_PASSWORD="tu_contraseña_postgres"
+$env:JWT_SECRET="el_secreto_base64_que_generaste"
 ```
 
 Estas variables estarán disponibles mientras permanezca abierta esa sesión.
@@ -184,6 +186,7 @@ Si ejecutas el proyecto desde IntelliJ IDEA, debes configurar las variables en l
 DB_URL=jdbc:postgresql://localhost:5432/tamachihua_erp
 DB_USERNAME=tu_usuario_postgres
 DB_PASSWORD=tu_contraseña_postgres
+JWT_SECRET=el_secreto_base64_que_generaste
 ```
 
 6. Guarda los cambios.
@@ -731,16 +734,28 @@ La configuración del token se realiza mediante variables de entorno. Se
 debe definir `JWT_SECRET` con una clave secreta segura, codificada en
 Base64 y con una longitud mínima de 32 bytes una vez decodificada.
 
-Cómo generar JWT_SECRET (por ejemplo openssl rand -base64 32).
-En application.properties debe existir:
-app.jwt.secret=${JWT_SECRET}
-app.jwt.expiration=3600
+Cómo generar `JWT_SECRET`:
 
-Ejemplo de configuración en Linux:
+- **Windows (PowerShell):**
 
-``` bash
-export JWT_SECRET="REEMPLAZAR_POR_UN_SECRETO_BASE64_SEGURO"
-```
+  ```powershell
+  $bytes = New-Object byte[] 32
+  $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+  $rng.GetBytes($bytes)
+  [Convert]::ToBase64String($bytes)
+  ```
+
+  Copia el resultado y asígnalo a la variable:
+
+  ```powershell
+  $env:JWT_SECRET="el_secreto_base64_que_generaste"
+  ```
+
+- **Linux, macOS o Git Bash:**
+
+  ```bash
+  export JWT_SECRET="$(openssl rand -base64 32)"
+  ```
 
 En `application.properties` se utilizan las siguientes propiedades:
 
