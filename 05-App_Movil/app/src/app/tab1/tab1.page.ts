@@ -25,7 +25,7 @@ import { addIcons } from 'ionicons';
 import { logOutOutline } from 'ionicons/icons';
 
 import type { Producto } from '../models/producto';
-import { Api } from '../services/api';
+import { Api, type ApiError } from '../services/api';
 import { Auth } from '../services/auth';
 
 interface Categoria {
@@ -128,9 +128,16 @@ export class Tab1Page implements OnInit {
           this.cdr.markForCheck();
         }
       },
-      error: (error) => {
+      error: (error: ApiError) => {
         if (busqueda === this.busquedaActual) {
           console.error('Error al cargar productos:', error);
+
+          // 401: la sesión venció; el interceptor ya envía al login, no es un problema de conexión
+          if (error.status === 401) {
+            this.cargando = false;
+            this.cdr.markForCheck();
+            return;
+          }
 
           this.resultados = [];
           this.cargando = false;

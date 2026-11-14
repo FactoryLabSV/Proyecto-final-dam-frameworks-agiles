@@ -6,6 +6,10 @@ import type { Observable } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 
+export interface ApiError extends Error {
+  status: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -38,6 +42,8 @@ export class Api {
       message = 'El servidor presentó un error. Intentá más tarde.';
     }
 
-    return throwError(() => new Error(message));
+    const apiError = new Error(message) as ApiError;
+    apiError.status = error.status;
+    return throwError(() => apiError);
   }
 }

@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { environment } from '../../environments/environment';
 
-import { Api } from './api';
+import { Api, type ApiError } from './api';
 
 describe('Api', () => {
   let service: Api;
@@ -45,8 +45,9 @@ describe('Api', () => {
       next: () => {
         throw new Error('Se esperaba un error');
       },
-      error: (error) => {
+      error: (error: ApiError) => {
         expect(error.message).toBe('No se pudo conectar con el servidor.');
+        expect(error.status).toBe(0);
       },
     });
 
@@ -55,6 +56,25 @@ describe('Api', () => {
     solicitud.flush(null, {
       status: 0,
       statusText: 'Unknown Error',
+    });
+  });
+
+  it('debe conservar el código HTTP en el error', () => {
+    service.get('products').subscribe({
+      next: () => {
+        throw new Error('Se esperaba un error');
+      },
+      error: (error: ApiError) => {
+        expect(error.status).toBe(404);
+        expect(error.message).toBe('No se encontró el recurso solicitado.');
+      },
+    });
+
+    const solicitud = httpMock.expectOne(environment.apiUrl + '/products');
+
+    solicitud.flush(null, {
+      status: 404,
+      statusText: 'Not Found',
     });
   });
 });
