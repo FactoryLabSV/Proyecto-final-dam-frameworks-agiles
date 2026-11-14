@@ -20,6 +20,9 @@ public interface UserRepository
     Optional<User> findByUsername(String username);
 
     @EntityGraph(attributePaths = "role")
+    Optional<User> findByEmailIgnoreCase(String email);
+
+    @EntityGraph(attributePaths = "role")
     @Query("select u from User u where u.id = :id")
     Optional<User> findWithRoleById(@Param("id") Long id);
 

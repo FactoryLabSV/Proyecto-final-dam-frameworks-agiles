@@ -1,0 +1,111 @@
+<ion-content [fullscreen]="true" class="login-content">
+  <main class="login-wrapper">
+    <header class="login-brand">
+      <img
+        class="login-logo"
+        src="assets/logo/tamachihua-logo-horizontal.png"
+        width="270"
+        height="52"
+        alt="TAMACHIHUA-ERP"
+      />
+      <p class="login-brand-name">TAMACHIHUA-ERP <span aria-hidden="true">|</span> Inventario</p>
+    </header>
+
+    <section class="login-card" aria-labelledby="login-title">
+      <h1 id="login-title" class="login-title">Acceso al sistema</h1>
+      <p class="login-description">Ingresá con tu usuario para consultar existencias y precios.</p>
+
+      @if (sessionMessage) {
+      <p class="login-notice" role="status">{{ sessionMessage }}</p>
+      }
+
+      <form (ngSubmit)="iniciarSesion()" novalidate>
+        <div class="login-field">
+          <label for="username">Usuario o correo</label>
+
+          <ion-input
+            id="username"
+            name="username"
+            type="text"
+            fill="outline"
+            inputmode="text"
+            autocomplete="username"
+            autocapitalize="off"
+            [spellcheck]="false"
+            placeholder="usuario@empresa.com"
+            [(ngModel)]="username"
+            [class.login-input-invalid]="usernameError !== ''"
+            [attr.aria-invalid]="usernameError ? 'true' : null"
+            [attr.aria-describedby]="usernameError ? 'username-error' : null"
+          ></ion-input>
+
+          @if (usernameError) {
+          <p id="username-error" class="login-field-error">{{ usernameError }}</p>
+          }
+        </div>
+
+        <div class="login-field">
+          <label for="password">Contraseña</label>
+
+          <ion-input
+            id="password"
+            name="password"
+            fill="outline"
+            [type]="mostrarPassword ? 'text' : 'password'"
+            autocomplete="current-password"
+            autocapitalize="off"
+            [spellcheck]="false"
+            placeholder="••••••••••"
+            [(ngModel)]="password"
+            [class.login-input-invalid]="passwordError !== ''"
+            [attr.aria-invalid]="passwordError ? 'true' : null"
+            [attr.aria-describedby]="passwordError ? 'password-error' : null"
+          >
+            <ion-button
+              slot="end"
+              type="button"
+              fill="clear"
+              class="login-password-toggle"
+              [attr.aria-label]="
+                mostrarPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'
+              "
+              (click)="alternarPassword()"
+            >
+              <ion-icon aria-hidden="true" [name]="mostrarPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            </ion-button>
+          </ion-input>
+
+          @if (passwordError) {
+          <p id="password-error" class="login-field-error">{{ passwordError }}</p>
+          }
+        </div>
+
+        <ion-button
+          type="submit"
+          expand="block"
+          class="login-submit"
+          [disabled]="enviando()"
+          [attr.aria-busy]="enviando()"
+        >
+          @if (enviando()) {
+          <ion-spinner name="crescent" slot="start"></ion-spinner>
+          INGRESANDO... } @else {
+          <ion-icon slot="start" name="log-in-outline" aria-hidden="true"></ion-icon>
+          INICIAR SESIÓN }
+        </ion-button>
+      </form>
+
+      @if (errorMessage()) {
+      <div class="login-error" role="alert">
+        <ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>
+        <p>{{ errorMessage() }}</p>
+      </div>
+
+      @if (puedeReintentar()) {
+      <ion-button type="button" expand="block" fill="outline" class="login-retry" (click)="iniciarSesion()">
+        Reintentar
+      </ion-button>
+      } }
+    </section>
+  </main>
+</ion-content>
