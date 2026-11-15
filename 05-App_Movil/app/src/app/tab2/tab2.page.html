@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>TAMACHIHUA-ERP</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <h2>Consulta de categorías</h2>
+
+  <p>Categorías disponibles en el inventario.</p>
+
+  <ion-list>
+    @for (categoria of categorias; track categoria.id) {
+
+    <ion-item>
+      <ion-label>{{ categoria.name }}</ion-label>
+    </ion-item>
+
+    } @empty {
+
+    <div class="ion-text-center ion-padding">
+      <h3>No se encontraron categorías</h3>
+    </div>
+
+    }
+  </ion-list>
+</ion-content>

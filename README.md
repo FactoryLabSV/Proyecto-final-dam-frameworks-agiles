@@ -103,6 +103,8 @@ Estas reglas ya están en el archivo `.gitignore`. Si necesitas un archivo de co
 
 ## Documentación
 
+> La documentación del sprint en curso (actas, versiones nuevas de los documentos y entregables) está en la rama **`develop`**. En `main` solo está la versión cerrada del último sprint. Para verla en GitHub, elige `develop` en el selector de ramas.
+
 | Documento | Contenido |
 |---|---|
 | 01 – Propuesta de proyecto | Propuesta aprobada en Metodologías Ágiles |
@@ -113,3 +115,4 @@ Estas reglas ya están en el archivo `.gitignore`. Si necesitas un archivo de co
 | 06 – Consolidado de historias aportadas | Historias identificadas por el equipo y trazabilidad |
 | 07 – Product Backlog | Historias priorizadas, épicas, requisitos no funcionales, DoR y DoD |
 | 08 – Sprint Planning – Sprint 1 | Objetivo, tareas, responsables y agenda del Sprint 1 |
+| 09 – Sprint Planning – Sprint 2 | Objetivo, tareas, fechas y plan de contingencia del Sprint 2 |
