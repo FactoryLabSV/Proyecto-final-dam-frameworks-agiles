@@ -35,6 +35,7 @@
         item-value="id"
         hide-default-footer
         density="comfortable"
+        class="tabla-presentaciones"
         no-data-text="Este producto todavía no tiene presentaciones asignadas."
       >
         <!-- Presentación base y su equivalencia -->
@@ -101,7 +102,7 @@
 
         <!-- Acciones por presentación -->
         <template #item.acciones="{ item }">
-          <div class="d-flex flex-wrap justify-end ga-1">
+          <div class="d-flex flex-nowrap justify-end ga-0">
             <v-tooltip text="Editar código y stock mínimo" location="top">
               <template #activator="{ props }">
                 <v-btn
@@ -109,6 +110,7 @@
                   icon="mdi-pencil"
                   color="primary"
                   size="small"
+                  density="compact"
                   variant="text"
                   aria-label="Editar presentación"
                   @click="abrirEditar(item)"
@@ -126,6 +128,7 @@
                   :icon="item.isActive ? 'mdi-eye-off' : 'mdi-eye'"
                   :color="item.isActive ? 'warning' : 'success'"
                   size="small"
+                  density="compact"
                   variant="text"
                   :aria-label="item.isActive ? 'Desactivar presentación' : 'Activar presentación'"
                   @click="solicitarCambioEstado(item)"
@@ -141,6 +144,7 @@
                   icon="mdi-currency-usd"
                   color="teal"
                   size="small"
+                  density="compact"
                   variant="text"
                   aria-label="Cambiar precio"
                   @click="avisarPrecio(item)"
@@ -155,6 +159,7 @@
                   icon="mdi-history"
                   color="secondary"
                   size="small"
+                  density="compact"
                   variant="text"
                   aria-label="Ver historial de precios"
                   @click="avisarHistorial(item)"
@@ -470,8 +475,8 @@ export default {
         { title: 'Stock mínimo', key: 'minStock', align: 'end', sortable: false },
         { title: 'Precio vigente', key: 'currentPrice', align: 'end', sortable: false },
         { title: 'Estado', key: 'stockStatus', sortable: false },
-        { title: 'Activa', key: 'isActive', sortable: false },
-        { title: 'Acciones', key: 'acciones', align: 'end', sortable: false }
+        { title: 'Activa', key: 'isActive', sortable: false, width: '80px' },
+        { title: 'Acciones', key: 'acciones', align: 'end', sortable: false, minWidth: '150px' }
       ],
 
       //Listado Historial
@@ -939,3 +944,12 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+/* Menos relleno lateral en las celdas para que las acciones quepan sin scroll horizontal */
+.tabla-presentaciones :deep(th),
+.tabla-presentaciones :deep(td) {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+</style>

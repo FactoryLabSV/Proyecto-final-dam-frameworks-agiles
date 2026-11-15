@@ -202,7 +202,7 @@
 
           <!-- Acciones -->
           <template #item.acciones="{ item }">
-            <div class="d-flex flex-wrap justify-end ga-1">
+            <div class="d-flex flex-nowrap justify-end ga-1">
               <v-tooltip text="Ver detalle" location="top">
                 <template #activator="{ props }">
                   <v-btn
@@ -383,7 +383,7 @@ export default {
           title: 'Existencias por presentación',
           key: 'stockByPresentation',
           sortable: false,
-          width: '30%'
+          width: '24%'
         },
         {
           title: 'Estado',
@@ -395,7 +395,8 @@ export default {
           key: 'acciones',
           sortable: false,
           align: 'end',
-          width: '150px'
+          width: '150px',
+          minWidth: '150px'
         }
       ],
 
